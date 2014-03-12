@@ -1,0 +1,33 @@
+{
+  "name": "ampersand-collection",
+  "version": "0.0.0",
+  "description": "",
+  "main": "collection.js",
+  "scripts": {
+    "build": "browserify test/main.js -o test/bundle.js",
+    "start": "run-browser test/main.js",
+    "test": "node test/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/henrikjoreteg/ampersand-collection"
+  },
+  "keywords": [
+    "collection",
+    "client",
+    "mvc"
+  ],
+  "author": "Henrik Joreteg <henrik@andyet.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/henrikjoreteg/ampersand-collection/issues"
+  },
+  "homepage": "https://github.com/henrikjoreteg/ampersand-collection",
+  "dependencies": {
+    "underscore": "1.x.x"
+  },
+  "devDependencies": {
+    "tape": "2.x.x",
+    "run-browser": ""
+  }
+}
