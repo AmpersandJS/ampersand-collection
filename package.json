@@ -24,7 +24,9 @@
   },
   "homepage": "https://github.com/henrikjoreteg/ampersand-collection",
   "dependencies": {
-    "underscore": "1.x.x"
+    "underscore": "1.x.x",
+    "backbone-events-standalone": "0.x.x",
+    "backbone-extend-standalone": "0.x.x"
   },
   "devDependencies": {
     "tape": "2.x.x",

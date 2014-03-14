@@ -1,11 +1,22 @@
 var _ = require('underscore');
+var BackboneEvents = require('backbone-events-standalone');
+var BackboneExtend = require('backbone-extend-standalone');
 
 
-function Collection() {
-    this.models = [];
-    this.indexes = {};
+function Collection(models, options) {
+    options || (options = {});
+    if (options.model) this.model = options.model;
+    if (options.comparator !== void 0) this.comparator = options.comparator;
+    this._reset();
+    this.initialize.apply(this, arguments);
+    if (models) this.reset(models, _.extend({silent: true}, options));
 }
 
+BackboneEvents.mixin(Collection.prototype);
+
+Collection.prototype.initialize = function () {};
+
+Collection.prototype.indexes = ['id'];
 
 Collection.prototype.isModel = function (model) {
     return this.model && model instanceof this.model;
@@ -105,7 +116,7 @@ Collection.prototype.set = function (models, options) {
     // Unless silenced, it's time to fire all appropriate add/sort events.
     if (!options.silent) {
         for (var i = 0, length = toAdd.length; i < length; i++) {
-            (model = toAdd[i]).trigger('add', model, this, options);
+            //(model = toAdd[i]).trigger('add', model, this, options);
         }
         if (sort || (order && order.length)) this.trigger('sort', this, options);
     }
@@ -116,8 +127,13 @@ Collection.prototype.set = function (models, options) {
 
 Collection.prototype.get = function (query, indexName) {
     if (!query) return;
-    var index = this.indexes[indexName || 'id'];
+    var index = this._indexes[indexName || 'id'];
     return index[query] || index[query.id];
+};
+
+// Get the model at the given index.
+Collection.prototype.at = function(index) {
+      return this.models[index];
 };
 
 Collection.prototype.remove = function (models) {
@@ -150,8 +166,14 @@ Object.defineProperty(Collection.prototype, 'length', {
 // Private method to reset all internal state. Called when the collection
 // is first initialized or reset.
 Collection.prototype._reset = function() {
-    this.length = 0;
+    var list = this.indexes || [];
+    var i = 0;
+    var l = list.length;
     this.models = [];
+    this._indexes = {};
+    for (; i < l; i++) {
+        this._indexes[list[i]] = {};
+    }
 };
 
 Collection.prototype._prepareModel = function(attrs, options) {
@@ -168,23 +190,25 @@ Collection.prototype._prepareModel = function(attrs, options) {
 };
 
 Collection.prototype._deIndex = function (model) {
-    for (name in this.indexes) {
-        delete this.indexes[name][model[name] || model.get(name)];
+    for (name in this._indexes) {
+        delete this._indexes[name][model[name] || model.get(name)];
     }
 };
 
 // Internal method to create a model's ties to a collection.
 Collection.prototype._addReference = function(model, options) {
-    this._byId[model.cid] = model;
-    if (model.id != null) this._byId[model.id] = model;
-    if (!model.collection) model.collection = this;
-    model.on('all', this._onModelEvent, this);
+    for (var name in this._indexes) {
+        var indexVal = model[name] || (model.get && model.get(name));
+        if (indexVal) this._indexes[name][indexVal] = model;
+    }
+    //if (!model.collection) model.collection = this;
+    //model.on('all', this._onModelEvent, this);
 };
 
     // Internal method to sever a model's ties to a collection.
 Collection.prototype._removeReference = function(model, options) {
     if (this === model.collection) delete model.collection;
-    model.off('all', this._onModelEvent, this);
+    //model.off('all', this._onModelEvent, this);
 };
 
 // Underscore methods that we want to implement on the Collection.
@@ -219,6 +243,9 @@ _.each(attributeMethods, function(method) {
         return _[method](this.models, iterator, context);
     };
 });
+
+
+Collection.extend = BackboneExtend;
 
 
 module.exports = Collection;
