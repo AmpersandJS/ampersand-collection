@@ -1,8 +1,8 @@
-var _ = require('underscore');
 var BackboneEvents = require('backbone-events-standalone');
-var BackboneExtend = require('backbone-extend-standalone');
+var classExtend = require('./classExtend');
 var isArray = require('is-array');
 var extend = require('extend-object');
+var slice = [].slice;
 
 
 function Collection(models, options) {
@@ -18,7 +18,9 @@ BackboneEvents.mixin(Collection.prototype);
 
 Collection.prototype.initialize = function () {};
 
-Collection.prototype.indexes = ['id'];
+Collection.prototype.mainIndex = 'id';
+
+Collection.prototype.indexes = [];
 
 Collection.prototype.isModel = function (model) {
     return this.model && model instanceof this.model;
@@ -129,20 +131,20 @@ Collection.prototype.set = function (models, options) {
 
 Collection.prototype.get = function (query, indexName) {
     if (!query) return;
-    var index = this._indexes[indexName || 'id'];
+    var index = this._indexes[indexName || this.mainIndex];
     return index[query] || index[query.id];
 };
 
 // Get the model at the given index.
 Collection.prototype.at = function(index) {
-      return this.models[index];
+    return this.models[index];
 };
 
 Collection.prototype.remove = function (models) {
     var singular = !isArray(models);
     var i, length, model, index;
 
-    models = singular ? [models] : _.clone(models);
+    models = singular ? [models] : slice.call(models);
     options || (options = {});
     for (i = 0, length = models.length; i < length; i++) {
         model = models[i] = this.get(models[i]);
@@ -159,17 +161,29 @@ Collection.prototype.remove = function (models) {
       return singular ? models[0] : models;
 };
 
-Object.defineProperty(Collection.prototype, 'length', {
-    get: function () {
-        return this.models.length;
+// When you have more items than you want to add or remove individually,
+// you can reset the entire set with a new list of models, without firing
+// any granular `add` or `remove` events. Fires `reset` when finished.
+// Useful for bulk operations and optimizations.
+Collection.prototype.reset = function(models, options) {
+    options || (options = {});
+    for (var i = 0, length = this.models.length; i < length; i++) {
+        this._removeReference(this.models[i], options);
     }
-})
+    options.previousModels = this.models;
+    this._reset();
+    models = this.add(models, extend({silent: true}, options));
+    if (!options.silent) this.trigger('reset', this, options);
+    return models;
+};
+
 
 // Private method to reset all internal state. Called when the collection
 // is first initialized or reset.
 Collection.prototype._reset = function() {
     var list = this.indexes || [];
     var i = 0;
+    list.push(this.mainIndex);
     var l = list.length;
     this.models = [];
     this._indexes = {};
@@ -185,7 +199,7 @@ Collection.prototype._prepareModel = function(attrs, options) {
     if (this.isModel(attrs)) {
         return attrs;
     } else {
-        options = options ? _.clone(options) : {};
+        options = options ? extend({}, options) : {};
         options.collection = this;
         return new this.model(attrs, options)
     }
@@ -213,41 +227,12 @@ Collection.prototype._removeReference = function(model, options) {
     //model.off('all', this._onModelEvent, this);
 };
 
-// Underscore methods that we want to implement on the Collection.
-var methods = ['forEach', 'each', 'map', 'collect', 'reduce', 'foldl',
-    'inject', 'reduceRight', 'foldr', 'find', 'detect', 'filter', 'select',
-    'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
-    'max', 'min', 'toArray', 'size', 'first', 'head', 'take', 'initial', 'rest',
-    'tail', 'drop', 'last', 'without', 'difference', 'indexOf', 'shuffle',
-    'lastIndexOf', 'isEmpty', 'chain', 'sample', 'partition'
-];
-
-// Mix in each Underscore method as a proxy to `Collection#models`.
-_.each(methods, function(method) {
-    if (!_[method]) return;
-    Collection.prototype[method] = function() {
-        var args = slice.call(arguments);
-        args.unshift(this.models);
-        return _[method].apply(_, args);
-    };
+Object.defineProperty(Collection.prototype, 'length', {
+    get: function () {
+        return this.models.length;
+    }
 });
 
-// Underscore methods that take a property name as an argument.
-var attributeMethods = ['groupBy', 'countBy', 'sortBy', 'indexBy'];
-
-// Use attributes instead of properties.
-_.each(attributeMethods, function(method) {
-    if (!_[method]) return;
-    Collection.prototype[method] = function(value, context) {
-        var iterator = _.isFunction(value) ? value : function(model) {
-            return model.get(value);
-        };
-        return _[method](this.models, iterator, context);
-    };
-});
-
-
-Collection.extend = BackboneExtend;
-
+Collection.extend = classExtend;
 
 module.exports = Collection;
