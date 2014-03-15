@@ -38,3 +38,19 @@ test('indexes: optionally create other indexes', function (t) {
     t.equal(moe, c.get(3));
     t.end();
 });
+
+test('models: support for model constructors', function (t) {
+    var Model = function (attributes) {
+        this.attributes = attributes;
+    };
+    var C = Collection.extend({
+        model: Model
+    });
+    var m1 = new Model({name: 'moe'});
+    var c = new C();
+    c.add([{name: 'moe'}, m1]);
+    t.equal(m1, c.at(1));
+    t.ok(c.at(0) instanceof Model);
+    t.ok(c.at(1) instanceof Model);
+    t.end();
+});

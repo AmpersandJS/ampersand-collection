@@ -1,35 +1,36 @@
 {
   "name": "ampersand-collection",
   "version": "0.0.0",
-  "description": "",
-  "main": "collection.js",
-  "scripts": {
-    "build": "browserify test/main.js -o test/bundle.js",
-    "start": "run-browser test/main.js",
-    "test": "node test/main.js"
+  "author": "Henrik Joreteg <henrik@andyet.net>",
+  "bugs": {
+    "url": "https://github.com/henrikjoreteg/ampersand-collection/issues"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/henrikjoreteg/ampersand-collection"
+  "dependencies": {
+    "backbone-events-standalone": "0.x.x",
+    "backbone-extend-standalone": "0.x.x",
+    "extend-object": "0.x.x",
+    "is-array": "1.x.x",
+    "underscore": "1.x.x"
   },
+  "devDependencies": {
+    "run-browser": "",
+    "tape": "2.x.x"
+  },
+  "homepage": "https://github.com/henrikjoreteg/ampersand-collection",
   "keywords": [
     "collection",
     "client",
     "mvc"
   ],
-  "author": "Henrik Joreteg <henrik@andyet.net>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/henrikjoreteg/ampersand-collection/issues"
+  "main": "collection.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/henrikjoreteg/ampersand-collection"
   },
-  "homepage": "https://github.com/henrikjoreteg/ampersand-collection",
-  "dependencies": {
-    "underscore": "1.x.x",
-    "backbone-events-standalone": "0.x.x",
-    "backbone-extend-standalone": "0.x.x"
-  },
-  "devDependencies": {
-    "tape": "2.x.x",
-    "run-browser": ""
+  "scripts": {
+    "build": "browserify test/main.js -o test/bundle.js",
+    "start": "run-browser test/main.js",
+    "test": "node test/main.js"
   }
 }

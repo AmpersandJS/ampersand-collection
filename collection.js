@@ -1,6 +1,8 @@
 var _ = require('underscore');
 var BackboneEvents = require('backbone-events-standalone');
 var BackboneExtend = require('backbone-extend-standalone');
+var isArray = require('is-array');
+var extend = require('extend-object');
 
 
 function Collection(models, options) {
@@ -9,7 +11,7 @@ function Collection(models, options) {
     if (options.comparator !== void 0) this.comparator = options.comparator;
     this._reset();
     this.initialize.apply(this, arguments);
-    if (models) this.reset(models, _.extend({silent: true}, options));
+    if (models) this.reset(models, extend({silent: true}, options));
 }
 
 BackboneEvents.mixin(Collection.prototype);
@@ -23,7 +25,7 @@ Collection.prototype.isModel = function (model) {
 };
 
 Collection.prototype.add = function (models, options) {
-    return this.set(models, _.extend({merge: false, add: true, remove: false}, options));
+    return this.set(models, extend({merge: false, add: true, remove: false}, options));
 };
 
 // overridable parse method
@@ -32,14 +34,14 @@ Collection.prototype.parse = function (res, options) {
 };
 
 Collection.prototype.set = function (models, options) {
-    options = _.defaults({}, options, {add: true, remove: true, merge: true});
+    options = extend({add: true, remove: true, merge: true}, options);
     if (options.parse) models = this.parse(models, options);
-    var singular = !_.isArray(models);
+    var singular = !isArray(models);
     models = singular ? (models ? [models] : []) : models.slice();
     var id, model, attrs, existing, sort;
     var at = options.at;
     var sortable = this.comparator && (at == null) && options.sort !== false;
-    var sortAttr = _.isString(this.comparator) ? this.comparator : null;
+    var sortAttr = ('string' === typeof this.comparator) ? this.comparator : null;
     var toAdd = [], toRemove = [], modelMap = {};
     var add = options.add, merge = options.merge, remove = options.remove;
     var order = !sortable && add && remove ? [] : false;
@@ -137,7 +139,7 @@ Collection.prototype.at = function(index) {
 };
 
 Collection.prototype.remove = function (models) {
-    var singular = !_.isArray(models);
+    var singular = !isArray(models);
     var i, length, model, index;
 
     models = singular ? [models] : _.clone(models);
