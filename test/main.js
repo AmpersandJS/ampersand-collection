@@ -46,11 +46,13 @@ test('models: support for model constructors', function (t) {
     var C = Collection.extend({
         model: Model
     });
-    var m1 = new Model({name: 'moe'});
+    var m = new Model({name: 'moe'});
+    var plain = {name: 'moe'};
     var c = new C();
-    c.add([{name: 'moe'}, m1]);
-    t.equal(m1, c.at(1));
+    c.add([plain, m]);
+    t.equal(m, c.at(1));
     t.ok(c.at(0) instanceof Model);
     t.ok(c.at(1) instanceof Model);
+    t.notEqual(plain, c.at(0));
     t.end();
 });
