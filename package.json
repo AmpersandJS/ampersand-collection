@@ -23,7 +23,7 @@
     "mvc"
   ],
   "license": "MIT",
-  "main": "collection.js",
+  "main": "ampersand-collection.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/henrikjoreteg/ampersand-collection"
