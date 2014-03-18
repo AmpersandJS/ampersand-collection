@@ -1,5 +1,5 @@
 var BackboneEvents = require('backbone-events-standalone');
-var classExtend = require('./classExtend');
+var classExtend = require('ampersand-class-extend');
 var isArray = require('is-array');
 var extend = require('extend-object');
 var slice = [].slice;

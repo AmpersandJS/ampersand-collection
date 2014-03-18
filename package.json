@@ -7,10 +7,9 @@
   },
   "dependencies": {
     "backbone-events-standalone": "0.x.x",
-    "backbone-extend-standalone": "0.x.x",
+    "ampersand-class-extend": "0.x.x",
     "extend-object": "0.x.x",
-    "is-array": "1.x.x",
-    "underscore": "1.x.x"
+    "is-array": "1.x.x"
   },
   "devDependencies": {
     "run-browser": "",

@@ -1,8 +1,6 @@
 var test = require('tape');
-var Collection = require('../collection');
-var underscoreMixins = require('../underscoreMixins');
-var inBrowser = (typeof window !== 'undefined');
-var restMixins = inBrowser ? require('../restMixins') : {};
+var Collection = require('../ampersand-collection');
+
 
 test('basics', function (t) {
     var c = new Collection();
@@ -71,30 +69,3 @@ test('extend: multi-extend for easy mixins', function (t) {
     t.equal(c2.woah(), 'woah');
     t.end();
 });
-
-test('underscore mixins: should be able easily add underscore mixins', function (t) {
-    var C = Collection.extend(underscoreMixins);
-    var larry = {name: 'larry'};
-    var curly = {name: 'curly'};
-    var moe = {name: 'moe'};
-    var c = new C([larry, curly, moe]);
-
-    var filtered = c.filter(function (stooge) {
-        return stooge.name.length === 5;
-    });
-    t.equal(filtered.length, 2);
-    var sorted = c.sortBy('name');
-    t.equal(sorted[0], curly);
-    t.end();
-});
-
-// only run these in a browser (npm start open browser)
-if (inBrowser) {
-    test('rest mixins: should be able to extend to be restful collection', function (t) {
-        var C = Collection.extend(restMixins, {
-            url: '/test/stooges.json'
-        });
-        var c = new C();
-        c.fetch();
-    });
-}
