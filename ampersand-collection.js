@@ -177,6 +177,19 @@ Collection.prototype.reset = function (models, options) {
     return models;
 };
 
+Collection.prototype.sort = function (options) {
+    if (!this.comparator) throw new Error('Cannot sort a set without a comparator');
+    options || (options = {});
+
+    if (typeof this.comparator === 'string' || this.comparator.length === 1) {
+        this.models = this.sortBy(this.comparator, this);
+    } else {
+        this.models.sort(this.comparator.bind(this));
+    }
+
+    if (!options.silent) this.trigger('sort', this, options);
+    return this;
+};
 
 // Private method to reset all internal state. Called when the collection
 // is first initialized or reset.
