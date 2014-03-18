@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "author": "Henrik Joreteg <henrik@andyet.net>",
   "bugs": {
-    "url": "https://github.com/henrikjoreteg/ampersand-collection/issues"
+    "url": "https://github.com/ampersandjs/ampersand-collection/issues"
   },
   "dependencies": {
     "ampersand-class-extend": "0.x.x",
@@ -16,7 +16,7 @@
     "precommit-hook": "0.x.x",
     "tape": "2.x.x"
   },
-  "homepage": "https://github.com/henrikjoreteg/ampersand-collection",
+  "homepage": "https://github.com/ampersandjs/ampersand-collection",
   "keywords": [
     "collection",
     "client",
@@ -26,7 +26,7 @@
   "main": "ampersand-collection.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/henrikjoreteg/ampersand-collection"
+    "url": "git://github.com/ampersandjs/ampersand-collection"
   },
   "scripts": {
     "build": "browserify test/main.js -o test/bundle.js",
