@@ -12,7 +12,6 @@
     "is-array": "1.x.x"
   },
   "devDependencies": {
-    "run-browser": "",
     "tape": "2.x.x"
   },
   "homepage": "https://github.com/henrikjoreteg/ampersand-collection",
@@ -29,7 +28,6 @@
   },
   "scripts": {
     "build": "browserify test/main.js -o test/bundle.js",
-    "start": "run-browser test/main.js",
     "test": "node test/main.js"
   }
 }
