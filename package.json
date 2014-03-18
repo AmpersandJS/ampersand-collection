@@ -12,6 +12,8 @@
     "is-array": "1.x.x"
   },
   "devDependencies": {
+    "ampersand-state": "0.x.x",
+    "precommit-hook": "0.x.x",
     "tape": "2.x.x"
   },
   "homepage": "https://github.com/henrikjoreteg/ampersand-collection",

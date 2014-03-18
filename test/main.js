@@ -1,5 +1,11 @@
 var test = require('tape');
 var Collection = require('../ampersand-collection');
+var State = require('ampersand-state');
+var Stooge = State.extend({
+    props: {
+        name: 'string'
+    }
+});
 
 
 test('basics', function (t) {
@@ -58,14 +64,26 @@ test('models: support for model constructors', function (t) {
 });
 
 test('extend: multi-extend for easy mixins', function (t) {
-    var hey = {hey: function () {return 'hey';}};
-    var hi = {hi: function () {return 'hi';}};
+    var hey = {hey: function () { return 'hey'; }};
+    var hi = {hi: function () { return 'hi'; }};
     var C = Collection.extend(hey, hi);
     var c = new C();
     t.equal(c.hey(), 'hey');
     t.equal(c.hi(), 'hi');
-    var C2 = C.extend({woah: function () {return 'woah';}});
+    var C2 = C.extend({woah: function () { return 'woah'; }});
     var c2 = new C2();
     t.equal(c2.woah(), 'woah');
+    t.end();
+});
+
+test('add events', function (t) {
+    t.plan(2);
+    var c = new Collection();
+    var moe = new Stooge({name: 'moe'});
+    c.on('add', function (collection, model) {
+        t.equal(collection, c);
+        t.equal(model, moe);
+    });
+    c.add(moe);
     t.end();
 });

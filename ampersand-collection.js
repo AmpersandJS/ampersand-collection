@@ -48,11 +48,11 @@ Collection.prototype.set = function (models, options) {
     var add = options.add, merge = options.merge, remove = options.remove;
     var order = !sortable && add && remove ? [] : false;
     var targetProto = this.model && this.model.prototype || Object.prototype;
-
+    var i, length;
 
     // Turn bare objects into model references, and prevent invalid models
     // from being added.
-    for (var i = 0, length = models.length; i < length; i++) {
+    for (i = 0, length = models.length; i < length; i++) {
         attrs = models[i] || {};
         if (this.isModel(attrs)) {
             id = model = attrs;
@@ -91,7 +91,7 @@ Collection.prototype.set = function (models, options) {
 
     // Remove nonexistent models if appropriate.
     if (remove) {
-        for (var i = 0, length = this.length; i < length; i++) {
+        for (i = 0, length = this.length; i < length; i++) {
             if (!modelMap[(model = this.models[i]).cid]) toRemove.push(model);
         }
         if (toRemove.length) this.remove(toRemove, options);
@@ -102,13 +102,13 @@ Collection.prototype.set = function (models, options) {
         if (sortable) sort = true;
         this.length += toAdd.length;
         if (at != null) {
-            for (var i = 0, length = toAdd.length; i < length; i++) {
+            for (i = 0, length = toAdd.length; i < length; i++) {
                 this.models.splice(at + i, 0, toAdd[i]);
             }
         } else {
             if (order) this.models.length = 0;
             var orderedModels = order || toAdd;
-            for (var i = 0, length = orderedModels.length; i < length; i++) {
+            for (i = 0, length = orderedModels.length; i < length; i++) {
                 this.models.push(orderedModels[i]);
             }
         }
@@ -119,7 +119,7 @@ Collection.prototype.set = function (models, options) {
 
     // Unless silenced, it's time to fire all appropriate add/sort events.
     if (!options.silent) {
-        for (var i = 0, length = toAdd.length; i < length; i++) {
+        for (i = 0, length = toAdd.length; i < length; i++) {
             //(model = toAdd[i]).trigger('add', model, this, options);
         }
         if (sort || (order && order.length)) this.trigger('sort', this, options);
@@ -136,11 +136,11 @@ Collection.prototype.get = function (query, indexName) {
 };
 
 // Get the model at the given index.
-Collection.prototype.at = function(index) {
+Collection.prototype.at = function (index) {
     return this.models[index];
 };
 
-Collection.prototype.remove = function (models) {
+Collection.prototype.remove = function (models, options) {
     var singular = !isArray(models);
     var i, length, model, index;
 
@@ -153,19 +153,19 @@ Collection.prototype.remove = function (models) {
         index = this.indexOf(model);
         this.models.splice(index, 1);
         if (!options.silent) {
-          options.index = index;
-          model.trigger('remove', model, this, options);
+            options.index = index;
+            model.trigger('remove', model, this, options);
         }
         this._removeReference(model, options);
-      }
-      return singular ? models[0] : models;
+    }
+    return singular ? models[0] : models;
 };
 
 // When you have more items than you want to add or remove individually,
 // you can reset the entire set with a new list of models, without firing
 // any granular `add` or `remove` events. Fires `reset` when finished.
 // Useful for bulk operations and optimizations.
-Collection.prototype.reset = function(models, options) {
+Collection.prototype.reset = function (models, options) {
     options || (options = {});
     for (var i = 0, length = this.models.length; i < length; i++) {
         this._removeReference(this.models[i], options);
@@ -180,7 +180,7 @@ Collection.prototype.reset = function(models, options) {
 
 // Private method to reset all internal state. Called when the collection
 // is first initialized or reset.
-Collection.prototype._reset = function() {
+Collection.prototype._reset = function () {
     var list = this.indexes || [];
     var i = 0;
     list.push(this.mainIndex);
@@ -192,7 +192,7 @@ Collection.prototype._reset = function() {
     }
 };
 
-Collection.prototype._prepareModel = function(attrs, options) {
+Collection.prototype._prepareModel = function (attrs, options) {
     // if we haven't defined a constructor, skip this
     if (!this.model) return attrs;
 
@@ -201,30 +201,30 @@ Collection.prototype._prepareModel = function(attrs, options) {
     } else {
         options = options ? extend({}, options) : {};
         options.collection = this;
-        return new this.model(attrs, options)
+        return new this.model(attrs, options);
     }
 };
 
 Collection.prototype._deIndex = function (model) {
-    for (name in this._indexes) {
+    for (var name in this._indexes) {
         delete this._indexes[name][model[name] || model.get(name)];
     }
 };
 
 // Internal method to create a model's ties to a collection.
-Collection.prototype._addReference = function(model, options) {
+Collection.prototype._addReference = function (model, options) {
     for (var name in this._indexes) {
         var indexVal = model[name] || (model.get && model.get(name));
         if (indexVal) this._indexes[name][indexVal] = model;
     }
-    //if (!model.collection) model.collection = this;
-    //model.on('all', this._onModelEvent, this);
+    if (!model.collection) model.collection = this;
+    if (model.on) model.on('all', this._onModelEvent, this);
 };
 
     // Internal method to sever a model's ties to a collection.
-Collection.prototype._removeReference = function(model, options) {
+Collection.prototype._removeReference = function (model, options) {
     if (this === model.collection) delete model.collection;
-    //model.off('all', this._onModelEvent, this);
+    if (model.off) model.off('all', this._onModelEvent, this);
 };
 
 Object.defineProperty(Collection.prototype, 'length', {
