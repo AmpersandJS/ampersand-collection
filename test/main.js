@@ -3,6 +3,7 @@ var Collection = require('../ampersand-collection');
 var State = require('ampersand-state');
 var Stooge = State.extend({
     props: {
+        id: 'string',
         name: 'string'
     }
 });
@@ -80,10 +81,24 @@ test('add events', function (t) {
     t.plan(2);
     var c = new Collection();
     var moe = new Stooge({name: 'moe'});
-    c.on('add', function (collection, model) {
+    c.on('add', function (model, collection) {
         t.equal(collection, c);
         t.equal(model, moe);
     });
     c.add(moe);
+    t.end();
+});
+
+test('remove events', function (t) {
+    t.plan(2);
+    var c = new Collection();
+    var moe = new Stooge({name: 'moe', id: 'thing'});
+    c.add(moe);
+    c.on('remove', function (model, collection) {
+        console.log("REMOVED");
+        t.equal(collection, c);
+        t.equal(model, moe);
+    });
+    c.remove(moe);
     t.end();
 });

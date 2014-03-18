@@ -40,7 +40,7 @@ Collection.prototype.set = function (models, options) {
     if (options.parse) models = this.parse(models, options);
     var singular = !isArray(models);
     models = singular ? (models ? [models] : []) : models.slice();
-    var id, model, attrs, existing, sort;
+    var id, model, attrs, existing, sort, i, length;
     var at = options.at;
     var sortable = this.comparator && (at == null) && options.sort !== false;
     var sortAttr = ('string' === typeof this.comparator) ? this.comparator : null;
@@ -48,7 +48,6 @@ Collection.prototype.set = function (models, options) {
     var add = options.add, merge = options.merge, remove = options.remove;
     var order = !sortable && add && remove ? [] : false;
     var targetProto = this.model && this.model.prototype || Object.prototype;
-    var i, length;
 
     // Turn bare objects into model references, and prevent invalid models
     // from being added.
@@ -120,7 +119,8 @@ Collection.prototype.set = function (models, options) {
     // Unless silenced, it's time to fire all appropriate add/sort events.
     if (!options.silent) {
         for (i = 0, length = toAdd.length; i < length; i++) {
-            //(model = toAdd[i]).trigger('add', model, this, options);
+            model = toAdd[i];
+            if (model.trigger) model.trigger('add', model, this, options);
         }
         if (sort || (order && order.length)) this.trigger('sort', this, options);
     }
@@ -150,11 +150,11 @@ Collection.prototype.remove = function (models, options) {
         model = models[i] = this.get(models[i]);
         if (!model) continue;
         this._deIndex(model);
-        index = this.indexOf(model);
+        index = this.models.indexOf(model);
         this.models.splice(index, 1);
         if (!options.silent) {
             options.index = index;
-            model.trigger('remove', model, this, options);
+            if (model.trigger) model.trigger('remove', model, this, options);
         }
         this._removeReference(model, options);
     }
@@ -211,12 +211,16 @@ Collection.prototype._deIndex = function (model) {
     }
 };
 
-// Internal method to create a model's ties to a collection.
-Collection.prototype._addReference = function (model, options) {
+Collection.prototype._index = function (model) {
     for (var name in this._indexes) {
         var indexVal = model[name] || (model.get && model.get(name));
         if (indexVal) this._indexes[name][indexVal] = model;
     }
+};
+
+// Internal method to create a model's ties to a collection.
+Collection.prototype._addReference = function (model, options) {
+    this._index(model);
     if (!model.collection) model.collection = this;
     if (model.on) model.on('all', this._onModelEvent, this);
 };
@@ -224,7 +228,18 @@ Collection.prototype._addReference = function (model, options) {
     // Internal method to sever a model's ties to a collection.
 Collection.prototype._removeReference = function (model, options) {
     if (this === model.collection) delete model.collection;
+    this._deIndex(model);
     if (model.off) model.off('all', this._onModelEvent, this);
+};
+
+Collection.prototype._onModelEvent = function (event, model, collection, options) {
+    if ((event === 'add' || event === 'remove') && collection !== this) return;
+    if (event === 'destroy') this.remove(model, options);
+    if (model && event === 'change:' + model.idAttribute) {
+        this._deIndex(model);
+        this._index(model);
+    }
+    this.trigger.apply(this, arguments);
 };
 
 Object.defineProperty(Collection.prototype, 'length', {
