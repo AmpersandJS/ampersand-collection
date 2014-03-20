@@ -6,7 +6,25 @@ Unlike other tools this makes no assumptions about how it's going to be used or 
 
 It does not require underscore or jQuery, but instead makes it easy to extend with those methods if you'd like.
 
+<!-- starthide -->
+Part of the [Ampersand.js toolkit](http://ampersandjs.com) for building clientside applications.
+<!-- endhide -->
+
+## install
+
+```
+npm i ampersand-collection
+```
+
 ## massive flexibility
+
+The collection is a fairly low-level tool, in that it's useful for any time you want to be able to store JS objects in an array. 
+
+In many ways it's simply an observable array of objects.
+
+It emits `add`, `remove` events and makes it possible to merge in a set of objects into an existing collection and emit change events appropriately.
+
+If you extend it with a `.model` property that contains a constructor, the collection will ensure that objects that don't match that constructor are instantiated before being added to the collection.
 
 For example:
 
@@ -40,5 +58,16 @@ var collection = new RestfulCollection();
 // does ajax request
 collection.fetch();
 
-
 ```
+<!-- starthide -->
+
+## credits
+
+Created by [@HenrikJoreteg](http://twitter.com/henrikjoreteg) but many ideas and some code (especially for the `set`) methods should be credited to Jeremy Ashkenas and the rest of the Backbone.js authors. 
+
+
+## license
+
+MIT
+
+<!-- endhide -->
