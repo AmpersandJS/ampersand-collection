@@ -31,5 +31,18 @@
   "scripts": {
     "build": "browserify test/main.js -o test/bundle.js",
     "test": "node test/main.js"
+  },
+  "testling": {
+    "files": "test/*.js",
+    "browsers": [
+      "ie/9..latest",
+      "chrome/22..latest",
+      "firefox/16..latest",
+      "safari/5.1..latest",
+      "opera/11.0..latest",
+      "iphone/6..latest",
+      "ipad/6..latest",
+      "android-browser/latest"
+    ]
   }
 }
