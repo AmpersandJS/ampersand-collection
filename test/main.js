@@ -95,7 +95,6 @@ test('remove events', function (t) {
     var moe = new Stooge({name: 'moe', id: 'thing'});
     c.add(moe);
     c.on('remove', function (model, collection) {
-        console.log("REMOVED");
         t.equal(collection, c);
         t.equal(model, moe);
     });
