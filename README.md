@@ -2,7 +2,7 @@
 
 A way to store/manage objects or models.
 
-Unlike other tools this makes no assumptions about how it's going to be used or what type of models it is going to contain. This makes it a very flexible/useful tool for modeling all kinds of stuff. 
+Unlike other tools this makes no assumptions about how it's going to be used or what type of models it is going to contain. This makes it a very flexible/useful tool for modeling all kinds of stuff.
 
 It does not require underscore or jQuery, but instead makes it easy to extend with those methods if you'd like.
 
@@ -23,7 +23,7 @@ npm i ampersand-collection
 
 ## massive flexibility
 
-The collection is a fairly low-level tool, in that it's useful for any time you want to be able to store JS objects in an array. 
+The collection is a fairly low-level tool, in that it's useful for any time you want to be able to store JS objects in an array.
 
 In many ways it's simply an observable array of objects.
 
@@ -36,7 +36,6 @@ For example:
 ```js
 var Collection = require('ampersand-collection');
 
-
 // can just store plain objects
 var basicCollection = new Collection([
     {name: 'larry'},
@@ -45,24 +44,24 @@ var basicCollection = new Collection([
 ]);
 ```
 
+Adding [ampersand-collection-rest-mixin](http://github.com/AmpersandJS/ampersand-rest-mixin) and [ampersand-collection-underscore-mixin](http://github.com/AmpersandJS/ampersand-collection-underscore-mixin). 
 
 ```js
 var Collection = require('ampersand-collection');
-var restMixin = require('ampersand-rest-mixin');
-var underscoreMixin = require('ampersand-underscore-mixin');
+var restMixin = require('ampersand-collection-rest-mixin');
+var underscoreMixin = require('ampersand-collection-underscore-mixin');
 
 
 // or we can extend it with underscore and REST methods
 // to turn it into something similar to a Backbone Collection
 var RestfulCollection = Collection.extend(underscoreMixin, restMixin, {
-    url: '/mystuff' 
+    url: '/mystuff'
 });
 
 var collection = new RestfulCollection();
 
 // does ajax request
 collection.fetch();
-
 ```
 <!-- starthide -->
 
