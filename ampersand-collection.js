@@ -177,11 +177,31 @@ extend(Collection.prototype, BackboneEvents, {
     },
 
     sort: function (options) {
+        var self = this;
         if (!this.comparator) throw new Error('Cannot sort a set without a comparator');
         options || (options = {});
 
-        if (typeof this.comparator === 'string' || this.comparator.length === 1) {
-            this.models = this.sortBy(this.comparator, this);
+        if (typeof this.comparator === 'string') {
+            this.models.sort(function (left, right) {
+                if (left.get) {
+                    left = left.get(self.comparator);
+                    right = right.get(self.comparator);
+                } else {
+                    left = left[self.comparator];
+                    right = right[self.comparator];
+                }
+                if (left > right || left === void 0) return 1;
+                if (left < right || right === void 0) return -1;
+                return 0;
+            });
+        } else if (this.comparator.length === 1) {
+            this.models.sort(function (left, right) {
+                left = self.comparator(left);
+                right = self.comparator(right);
+                if (left > right || left === void 0) return 1;
+                if (left < right || right === void 0) return -1;
+                return 0;
+            });
         } else {
             this.models.sort(this.comparator.bind(this));
         }

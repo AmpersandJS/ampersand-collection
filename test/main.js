@@ -8,7 +8,6 @@ var Stooge = State.extend({
     }
 });
 
-
 test('basics', function (t) {
     var c = new Collection();
     var obj = {hey: 'there'};
@@ -99,5 +98,56 @@ test('remove events', function (t) {
         t.equal(model, moe);
     });
     c.remove(moe);
+    t.end();
+});
+
+test('comparator as a string', function (t) {
+    var Coll = Collection.extend({
+        comparator: 'name'
+    });
+    var c = new Coll();
+    var moe = new Stooge({name: 'moe', id: '1'});
+    var larry = new Stooge({name: 'larry', id: '2'});
+    var curly = new Stooge({name: 'curly', id: '3'});
+    c.add([moe, curly, larry]);
+    t.equal(c.at(0).name, 'curly');
+    t.equal(c.at(1).name, 'larry');
+    t.equal(c.at(2).name, 'moe');
+    t.end();
+});
+
+test('comparator as a 1 arg function', function (t) {
+    var Coll = Collection.extend({
+        comparator: function (m) {
+            return m.name;
+        }
+    });
+    var c = new Coll();
+    var moe = new Stooge({name: 'moe', id: '1'});
+    var larry = new Stooge({name: 'larry', id: '2'});
+    var curly = new Stooge({name: 'curly', id: '3'});
+    c.add([moe, curly, larry]);
+    t.equal(c.at(0).name, 'curly');
+    t.equal(c.at(1).name, 'larry');
+    t.equal(c.at(2).name, 'moe');
+    t.end();
+});
+
+test('comparator as standard 2 arg sort function', function (t) {
+    var Coll = Collection.extend({
+        comparator: function (m1, m2) {
+            if (m1.name > m2.name) return 1;
+            if (m1.name < m2.name) return -1;
+            return 0;
+        }
+    });
+    var c = new Coll();
+    var moe = new Stooge({name: 'moe', id: '1'});
+    var larry = new Stooge({name: 'larry', id: '2'});
+    var curly = new Stooge({name: 'curly', id: '3'});
+    c.add([moe, curly, larry]);
+    t.equal(c.at(0).name, 'curly');
+    t.equal(c.at(1).name, 'larry');
+    t.equal(c.at(2).name, 'moe');
     t.end();
 });
