@@ -6,10 +6,10 @@
     "url": "https://github.com/ampersandjs/ampersand-collection/issues"
   },
   "dependencies": {
-    "ampersand-class-extend": "0.x.x",
-    "backbone-events-standalone": "0.x.x",
-    "extend-object": "0.x.x",
-    "is-array": "1.x.x"
+    "ampersand-class-extend": "^1.0.0",
+    "backbone-events-standalone": "0.2.1",
+    "extend-object": "^1.0.0",
+    "is-array": "^1.0.1"
   },
   "devDependencies": {
     "ampersand-state": "0.x.x",
