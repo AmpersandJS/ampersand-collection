@@ -101,6 +101,19 @@ test('remove events', function (t) {
     t.end();
 });
 
+test('remove events for items that only have `cid`s', function (t) {
+    t.plan(2);
+    var c = new Collection();
+    var moe = new Stooge({name: 'moe'});
+    c.add(moe);
+    c.on('remove', function (model, collection) {
+        t.equal(collection, c);
+        t.equal(model, moe);
+    });
+    c.remove(moe);
+    t.end();
+});
+
 test('comparator as a string', function (t) {
     var Coll = Collection.extend({
         comparator: 'name'

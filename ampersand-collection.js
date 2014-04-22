@@ -131,7 +131,7 @@ extend(Collection.prototype, BackboneEvents, {
     get: function (query, indexName) {
         if (!query) return;
         var index = this._indexes[indexName || this.mainIndex];
-        return index[query] || index[query.id];
+        return index[query] || index[query.id] || this._indexes.cid[query.cid];
     },
 
     // Get the model at the given index.
@@ -216,6 +216,7 @@ extend(Collection.prototype, BackboneEvents, {
         var list = this.indexes || [];
         var i = 0;
         list.push(this.mainIndex);
+        list.push('cid');
         var l = list.length;
         this.models = [];
         this._indexes = {};
