@@ -164,3 +164,10 @@ test('comparator as standard 2 arg sort function', function (t) {
     t.equal(c.at(2).name, 'moe');
     t.end();
 });
+
+test('should store reference to parent instance if passed', function (t) {
+    var parent = {};
+    var c = new Collection([], {parent: parent});
+    t.equal(c.parent, parent);
+    t.end();
+});

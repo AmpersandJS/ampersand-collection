@@ -8,7 +8,8 @@ var slice = [].slice;
 function Collection(models, options) {
     options || (options = {});
     if (options.model) this.model = options.model;
-    if (options.comparator !== void 0) this.comparator = options.comparator;
+    if (options.comparator) this.comparator = options.comparator;
+    if (options.parent) this.parent = options.parent;
     this._reset();
     this.initialize.apply(this, arguments);
     if (models) this.reset(models, extend({silent: true}, options));
