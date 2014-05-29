@@ -194,3 +194,31 @@ test('`set` method should work for simple objects without ids', function (t) {
     t.equal(first.some, 'thing');
     t.end();
 });
+
+test('Proxy `Array.prototype` methods', function (t) {
+    var c = new Collection();
+    c.set([{id: 'thing'}, {id: 'other'}]);
+    var ids = c.map(function (item) {
+        return item.id;
+    });
+    t.deepEqual(ids, ['thing', 'other']);
+
+    var count = 0;
+    c.each(function () {
+        count++;
+    });
+    t.equal(count, 2);
+    c.forEach(function () {
+        count++;
+    });
+    t.equal(count, 4);
+    t.end();
+});
+
+test('Serialize/toJSON method', function (t) {
+    var c = new Collection();
+    c.set([{id: 'thing'}, {id: 'other'}]);
+    t.deepEqual([{id: 'thing'}, {id: 'other'}], c.serialize());
+    t.equal(JSON.stringify([{id: 'thing'}, {id: 'other'}]), JSON.stringify(c));
+    t.end();
+});

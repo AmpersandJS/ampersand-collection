@@ -35,6 +35,24 @@ extend(Collection.prototype, BackboneEvents, {
         return res;
     },
 
+    // overridable serialize method
+    serialize: function () {
+        return this.map(function (model) {
+            if (model.serialize) {
+                return model.serialize();
+            } else {
+                var out = {};
+                extend(out, model);
+                delete out.collection;
+                return out;
+            }
+        });
+    },
+
+    toJSON: function () {
+        return this.serialize();
+    },
+
     set: function (models, options) {
         options = extend({add: true, remove: true, merge: true}, options);
         if (options.parse) models = this.parse(models, options);
@@ -288,6 +306,27 @@ Object.defineProperty(Collection.prototype, 'length', {
         return this.models.length;
     }
 });
+
+var arrayMethods = [
+    'indexOf',
+    'lastIndexOf',
+    'every',
+    'some',
+    'forEach',
+    'map',
+    'filter',
+    'reduce',
+    'reduceRight'
+];
+
+arrayMethods.forEach(function (method) {
+    Collection.prototype[method] = function () {
+        return this.models[method].apply(this.models, arguments);
+    };
+});
+
+// alias each/forEach for maximum compatibility
+Collection.prototype.each = Collection.prototype.forEach;
 
 Collection.extend = classExtend;
 
