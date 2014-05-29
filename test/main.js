@@ -183,3 +183,14 @@ test('`set` method should work for simple objects too', function (t) {
     t.equal(first.other, 'property');
     t.end();
 });
+
+test('`set` method should work for simple objects without ids', function (t) {
+    var c = new Collection();
+    c.set([{some: 'thing'}, {random: 'other'}]);
+    t.equal(c.length, 2, 'should have two items');
+    c.set([{other: 'third'}], {remove: false});
+    t.equal(c.length, 3);
+    var first = c.at(0);
+    t.equal(first.some, 'thing');
+    t.end();
+});

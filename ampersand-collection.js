@@ -90,7 +90,7 @@ extend(Collection.prototype, BackboneEvents, {
             // Do not add multiple models with the same `id`.
             model = existing || model;
             if (!model) continue;
-            if (order && ((model.isNew && model.isNew()) || !modelMap[model.id])) order.push(model);
+            if (order && ((model.isNew && model.isNew() || !model.id) || !modelMap[model.id])) order.push(model);
             modelMap[model.id] = true;
         }
 
