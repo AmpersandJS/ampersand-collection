@@ -171,3 +171,15 @@ test('should store reference to parent instance if passed', function (t) {
     t.equal(c.parent, parent);
     t.end();
 });
+
+test('`set` method should work for simple objects too', function (t) {
+    var c = new Collection();
+    c.set([{id: 'thing'}, {id: 'other'}]);
+    t.equal(c.length, 2, 'should have two items');
+    c.set([{id: 'thing', other: 'property'}], {remove: true});
+    t.equal(c.length, 1, 'should have one item');
+    var first = c.at(0);
+    t.equal(first.id, 'thing');
+    t.equal(first.other, 'property');
+    t.end();
+});

@@ -68,8 +68,14 @@ extend(Collection.prototype, BackboneEvents, {
                 if (merge) {
                     attrs = attrs === model ? model.attributes : attrs;
                     if (options.parse) attrs = existing.parse(attrs, options);
-                    existing.set(attrs, options);
-                    if (sortable && !sort && existing.hasChanged(sortAttr)) sort = true;
+                    // if this is model
+                    if (existing.set) {
+                        existing.set(attrs, options);
+                        if (sortable && !sort && existing.hasChanged(sortAttr)) sort = true;
+                    } else {
+                        // if not just update the properties
+                        extend(existing, attrs);
+                    }
                 }
                 models[i] = existing;
 
@@ -84,7 +90,7 @@ extend(Collection.prototype, BackboneEvents, {
             // Do not add multiple models with the same `id`.
             model = existing || model;
             if (!model) continue;
-            if (order && (model.isNew() || !modelMap[model.id])) order.push(model);
+            if (order && ((model.isNew && model.isNew()) || !modelMap[model.id])) order.push(model);
             modelMap[model.id] = true;
         }
 
