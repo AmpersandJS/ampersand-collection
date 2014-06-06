@@ -63,6 +63,14 @@ var collection = new RestfulCollection();
 // does ajax request
 collection.fetch();
 ```
+
+## A quick note about instanceof checks
+
+With npm and browserify for module deps you can sometimes end up with a situation where, the same `collection` constructor wasn't used to build a `collection` object. As a result `instanceof` checks will fail. 
+
+In order to deal with this (because sometimes this is a legitimate scenario), `collection` simply creates a read-only `isCollection` property on all collection objects that can be used to check whether or a not a given object is in fact a collection object no matter what its constructor was.
+
+
 <!-- starthide -->
 
 ## credits

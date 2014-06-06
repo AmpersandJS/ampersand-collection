@@ -301,9 +301,14 @@ extend(Collection.prototype, BackboneEvents, {
     }
 });
 
-Object.defineProperty(Collection.prototype, 'length', {
-    get: function () {
-        return this.models.length;
+Object.defineProperties(Collection.prototype, {
+    length: {
+        get: function () {
+            return this.models.length;
+        }
+    },
+    isCollection: {
+        value: true
     }
 });
 

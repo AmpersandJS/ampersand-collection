@@ -222,3 +222,11 @@ test('Serialize/toJSON method', function (t) {
     t.equal(JSON.stringify([{id: 'thing'}, {id: 'other'}]), JSON.stringify(c));
     t.end();
 });
+
+test('Ensure `isCollection` exists and is immutable', function (t) {
+    var c = new Collection();
+    t.ok(c.isCollection);
+    c.isCollection = false;
+    t.ok(c.isCollection);
+    t.end();
+});
