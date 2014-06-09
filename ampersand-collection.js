@@ -82,7 +82,7 @@ extend(Collection.prototype, BackboneEvents, {
             // If a duplicate is found, prevent it from being added and
             // optionally merge it into the existing model.
             if (existing = this.get(id)) {
-                if (remove) modelMap[existing.cid] = true;
+                if (remove) modelMap[existing.cid || existing.id] = true;
                 if (merge) {
                     attrs = attrs === model ? model.attributes : attrs;
                     if (options.parse) attrs = existing.parse(attrs, options);
@@ -115,7 +115,8 @@ extend(Collection.prototype, BackboneEvents, {
         // Remove nonexistent models if appropriate.
         if (remove) {
             for (i = 0, length = this.length; i < length; i++) {
-                if (!modelMap[(model = this.models[i]).cid]) toRemove.push(model);
+                model = this.models[i];
+                if (!modelMap[model.cid || model.id]) toRemove.push(model);
             }
             if (toRemove.length) this.remove(toRemove, options);
         }
@@ -123,13 +124,11 @@ extend(Collection.prototype, BackboneEvents, {
         // See if sorting is needed, update `length` and splice in new models.
         if (toAdd.length || (order && order.length)) {
             if (sortable) sort = true;
-            this.length += toAdd.length;
             if (at != null) {
                 for (i = 0, length = toAdd.length; i < length; i++) {
                     this.models.splice(at + i, 0, toAdd[i]);
                 }
             } else {
-                if (order) this.models.length = 0;
                 var orderedModels = order || toAdd;
                 for (i = 0, length = orderedModels.length; i < length; i++) {
                     this.models.push(orderedModels[i]);
@@ -265,7 +264,7 @@ extend(Collection.prototype, BackboneEvents, {
 
     _deIndex: function (model) {
         for (var name in this._indexes) {
-            delete this._indexes[name][model[name] || model.get(name)];
+            delete this._indexes[name][model[name] || (model.get && model.get(name))];
         }
     },
 
