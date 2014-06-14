@@ -172,6 +172,16 @@ test('should store reference to parent instance if passed', function (t) {
     t.end();
 });
 
+test('`set` should remove models that aren\'t there', function (t) {
+    var c = new Collection();
+    c.model = Stooge;
+    c.set([{name: 'moe', id: '1'}, {name: 'larry', id: '2'}, {name: 'curly', id: '3'}]);
+    t.equal(c.length, 3, 'should have 3 stooges');
+    c.set([{name: 'moe', id: '1'}, {name: 'larry', id: '2'}]);
+    t.equal(c.length, 2, 'should have 2 stooges left');
+    t.end();
+});
+
 test('`set` method should work for simple objects too', function (t) {
     var c = new Collection();
     c.set([{id: 'thing'}, {id: 'other'}]);
