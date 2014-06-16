@@ -143,7 +143,11 @@ extend(Collection.prototype, BackboneEvents, {
         if (!options.silent) {
             for (i = 0, length = toAdd.length; i < length; i++) {
                 model = toAdd[i];
-                if (model.trigger) model.trigger('add', model, this, options);
+                if (model.trigger) {
+                    model.trigger('add', model, this, options);
+                } else {
+                    this.trigger('add', model, this, options);
+                }
             }
             if (sort || (order && order.length)) this.trigger('sort', this, options);
         }
@@ -177,7 +181,11 @@ extend(Collection.prototype, BackboneEvents, {
             this.models.splice(index, 1);
             if (!options.silent) {
                 options.index = index;
-                if (model.trigger) model.trigger('remove', model, this, options);
+                if (model.trigger) {
+                    model.trigger('remove', model, this, options);
+                } else {
+                    this.trigger('remove', model, this, options);
+                }
             }
             this._removeReference(model, options);
         }

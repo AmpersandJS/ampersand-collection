@@ -240,3 +240,24 @@ test('Ensure `isCollection` exists and is immutable', function (t) {
     t.ok(c.isCollection);
     t.end();
 });
+
+test('add/remove events should be triggerd with POJO collections', function (t) {
+    t.plan(4);
+
+    var c = new Collection();
+    var newModel = { id: 1, foo: 'bar' };
+
+    c.once('add', function (model, collection, options) {
+        t.equal(model, newModel);
+        t.equal(collection, c);
+    });
+
+    c.add(newModel);
+
+    c.once('remove', function (model, collection, options) {
+        t.equal(model.id, 1);
+        t.equal(collection, c);
+    });
+
+    c.remove(newModel);
+});
