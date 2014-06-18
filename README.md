@@ -10,17 +10,20 @@ It does not require underscore or jQuery, but instead makes it easy to extend wi
 Part of the [Ampersand.js toolkit](http://ampersandjs.com) for building clientside applications.
 <!-- endhide -->
 
+<!-- starthide -->
 ## browser support
 
 [![browser support](https://ci.testling.com/ampersandjs/ampersand-collection.png)
 ](https://ci.testling.com/ampersandjs/ampersand-collection)
+<!-- endhide -->
 
-## install
+## Installation
 
 ```
 npm i ampersand-collection
 ```
 
+<!-- starthide -->
 ## massive flexibility
 
 The collection is a fairly low-level tool, in that it's useful for any time you want to be able to store JS objects in an array.
@@ -69,7 +72,75 @@ collection.fetch();
 With npm and browserify for module deps you can sometimes end up with a situation where, the same `collection` constructor wasn't used to build a `collection` object. As a result `instanceof` checks will fail. 
 
 In order to deal with this (because sometimes this is a legitimate scenario), `collection` simply creates a read-only `isCollection` property on all collection objects that can be used to check whether or a not a given object is in fact a collection object no matter what its constructor was.
+<!-- endhide -->
 
+## API Reference
+
+### extend `AmpersandCollection.extend([attributes])`
+
+### constructor/initialize `new AmpersandCollection([modelsArray], [options])`
+
+### model `collection.model`
+
+### mainIndex `collection.mainIndex
+
+### indexes `collections.indexes`
+
+### isModel `collection.isModel(model)`
+
+### length `collection.length`
+
+### isCollection `collection.isCollection`
+
+### add `collection.add(modelOrObject)`
+
+### serialize `collection.serialize()`
+
+### toJSON `collection.toJSON()`
+
+### set `collection.set(models, [options])`
+
+### get `collection.get(query, [indexName])`
+
+### at `collection.at(index)`
+
+### remove `collection.remove(models, [options])`
+
+### reset `collection.reset(models, [options])`
+
+### sort `collection.sort([options])`
+
+### **proxied ES5 array methods (9)**
+
+The base AmpersandCollection proxies some basic ES5 methods to the underlying model array:
+
+* indexOf
+* lastIndexOf
+* every
+* some
+* forEach
+* each (alias for forEach)
+* map
+* filter
+* reduce
+* reduceRight
+
+Unlike a backbone collection it doesn not include underscore and all the array methods from underscore, though if you wish more functions than those built into modern browsers, you can mixin [ampersand-collection-underscore-mixin](#ampersand-collection-underscore-mixin) to get them.
+
+```javascript
+var people = People([
+    { name: 'Phil', hatColor: 'red' },
+    { name: 'Jenn', hatColor: 'green' },
+    { name: 'Henrik', hatColor: 'blue' },
+    { name: 'Julie', hatColor: 'yellow' }
+]);
+
+people.map(function (person) { return person.name; }) //=> ['Phil', 'Jenn', 'Henrik', 'Julie']
+
+people.filter(function (person) {
+    return person.name[0] === 'J';
+}) //=> ['Jenn', 'Julie']
+```
 
 <!-- starthide -->
 
