@@ -181,7 +181,7 @@ Add a model (or an array of models) to the collection, firing an `"add"` event. 
 var ships = new AmpersandCollection();
 
 ships.on("add", function(ship) {
-  console.lg("Ahoy " + ship.name + "!");
+  console.log("Ahoy " + ship.name + "!");
 });
 
 ships.add([
