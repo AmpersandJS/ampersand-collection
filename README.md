@@ -287,7 +287,7 @@ Force a collection to re-sort itself. You don't need to call this under normal c
 
 Raw access to the JavaScript array of models inside of the collection. Usually you'll want to use `get`, `at`, or the [proxied array methods](#proxied-es5-array-methods-9) to access model objects, but occasionally a direct reference to the array is desired.
 
-### **proxied ES5 array methods (9)**
+### proxied ES5 array methods (9)
 
 The base AmpersandCollection proxies some basic ES5 methods to the underlying model array. Further documentation of these methods is available at [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array#Iteration_methods)
 
