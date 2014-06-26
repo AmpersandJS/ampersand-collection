@@ -87,7 +87,7 @@ Typically you will specify a `model` constructor (if you are storing [ampersand-
 Override this property to specify the model class that the collection contains. If defined, you can pass raw attributes objects (and arrays) to `add` and `reset`, and the attributes will be converted into a model of the proper type.
 
 ```javascript
-var Library = AmeprsandCollection.extend({
+var Library = AmpersandCollection.extend({
     model: Book
 });
 ```
@@ -95,7 +95,7 @@ var Library = AmeprsandCollection.extend({
 A collection can also contain polymorphic models by overriding this property with a function that returns a model.
 
 ```javascript
-var Library = Backbone.Collection.extend({
+var Library = AmpersandCollection.extend({
 
   model: function(attrs, options) {
     if (condition) {
