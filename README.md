@@ -199,7 +199,7 @@ Note that adding the same model (a model with the same id) to a collection more 
 
 ### serialize `collection.serialize()`
 
-Serialize the collection into a plain javascript array, ready for sending to the server (typically called via [toJSON](#ampersand-state-tojson)). Will also call `serialize()` on each model in the collection.
+Serialize the collection into a plain javascript array, ready for sending to the server (typically called via [toJSON](#ampersand-collection-tojson)). Will also call `serialize()` on each model in the collection.
 
 ### toJSON `collection.toJSON()`
 
@@ -285,7 +285,7 @@ Force a collection to re-sort itself. You don't need to call this under normal c
 
 ### models `collection.models`
 
-Raw access to the JavaScript array of models inside of the collection. Usually you'll want to use `get`, `at`, or the [proxied array methods](#proxied-es5-array-methods-9) to access model objects, but occasionally a direct reference to the array is desired.
+Raw access to the JavaScript array of models inside of the collection. Usually you'll want to use `get`, `at`, or the [proxied array methods](#ampersand-collection-proxied-es5-array-methods-9) to access model objects, but occasionally a direct reference to the array is desired.
 
 ### proxied ES5 array methods (9)
 
