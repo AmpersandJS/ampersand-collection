@@ -119,7 +119,7 @@ var people = new AmpersandCollection([{ name: 'phil' }, { name: 'bob' }, { name:
 });
 ```
 
-### mainIndex `collection.mainIndex
+### mainIndex `collection.mainIndex`
 
 Specify which key on your models should be used as their main unique identifier. Defaults to `id`. This is the default key that [`get`](#ampersand-collection-get) will use to retrieve models by, as well as the key add/set/remove will compare to determine whether a model exists in the collection or not.
 
