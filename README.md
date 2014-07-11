@@ -111,7 +111,7 @@ var Library = AmpersandCollection.extend({
 
 ### constructor/initialize `new AmpersandCollection([models], [options])`
 
-When creating an AmpersandCollection, you may choose to pass in the initial array of **models**. The collection's [comparator](#ampersand-collection-compator) may be included as an option. Passing `false` as the comparator option will prevent sorting. If you define an **initialize** function, it will be invoked when the collection is created. There are a couple of options that, if provided, are attached to the collection directly: `model` and `comparator`.
+When creating an AmpersandCollection, you may choose to pass in the initial array of **models**. The collection's [comparator](#comparator) may be included as an option. If you define an **initialize** function, it will be invoked when the collection is created. There are a couple of options that, if provided, are attached to the collection directly: `model`, `comparator` and `parent`.
 
 ```javascript
 var people = new AmpersandCollection([{ name: 'phil' }, { name: 'bob' }, { name: 'jane' }], {
@@ -286,6 +286,14 @@ Force a collection to re-sort itself. You don't need to call this under normal c
 ### models `collection.models`
 
 Raw access to the JavaScript array of models inside of the collection. Usually you'll want to use `get`, `at`, or the [proxied array methods](#ampersand-collection-proxied-es5-array-methods-9) to access model objects, but occasionally a direct reference to the array is desired.
+
+### comparator
+
+Comparator option lets you define how models within a given collection will be sorted. There're a few ways to declare your comparator:
+
+* Passing `false` will prevent sorting
+* Passing `string` will sort collection by a specific model attribute
+* Passing `function` will use native array sort function, which you can define with either 1 argument (each model one by one) or more, which lets you write custom compare functions with next 2 models as arguments
 
 ### proxied ES5 array methods (9)
 
