@@ -94,6 +94,8 @@ var Library = AmpersandCollection.extend({
 
 A collection can also contain polymorphic models by overriding this property with a function that returns a model.
 
+*Please note* that if you do this, you'll also want to overwrite `isModel` method with your own so you can describe the logic that should be used to determine whether an object is already an instantiated model or not.
+
 ```javascript
 var Library = AmpersandCollection.extend({
 
@@ -103,6 +105,10 @@ var Library = AmpersandCollection.extend({
     } else {
       return new PrivateDocument(attrs, options);
     }
+  },
+
+  isModel: function (model) {
+    return model instanceof PublicDocument || model instanceof PrivateDocument;
   }
 
 });
