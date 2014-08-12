@@ -261,3 +261,25 @@ test('add/remove events should be triggerd with POJO collections', function (t) 
 
     c.remove(newModel);
 });
+
+test('Bug 14. Should prevent duplicate items when using non-standard idAttribute', function (t) {
+    var Model = State.extend({
+        idAttribute: '_id',
+        props: {
+            _id: 'string'
+        }
+    });
+
+    var C = Collection.extend({
+        mainIndex: '_id',
+        model: Model
+    });
+    var c = new C([{_id: '2'}, {_id: '2'}, {_id: '2'}]);
+
+    t.equal(c.length, 1, 'should still be 1');
+    c.add({_id: '2'});
+    t.equal(c.length, 1, 'should still be 1 if added later');
+    c.add(new Model({_id: '2'}));
+    t.equal(c.length, 1, 'should still be 1 if added as an instantiated model');
+    t.end();
+});
