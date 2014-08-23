@@ -132,7 +132,7 @@ Specify which key on your models should be used as their main unique identifier.
 If your server does not use `id` as the model identifier, you would typically override this when extending AmpersandCollection, like so:
 
 ```javascript
-var People = AmpersandColletion.extend({
+var People = AmpersandCollection.extend({
     mainIndex: '_id'
 });
 ```
