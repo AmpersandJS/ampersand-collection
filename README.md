@@ -47,7 +47,7 @@ var basicCollection = new Collection([
 ]);
 ```
 
-Adding [ampersand-collection-rest-mixin](http://github.com/AmpersandJS/ampersand-rest-mixin) and [ampersand-collection-underscore-mixin](http://github.com/AmpersandJS/ampersand-collection-underscore-mixin). 
+Adding [ampersand-collection-rest-mixin](https://github.com/AmpersandJS/ampersand-collection-rest-mixin) and [ampersand-collection-underscore-mixin](http://github.com/AmpersandJS/ampersand-collection-underscore-mixin). 
 
 ```js
 var Collection = require('ampersand-collection');
