@@ -283,3 +283,42 @@ test('Bug 14. Should prevent duplicate items when using non-standard idAttribute
     t.equal(c.length, 1, 'should still be 1 if added as an instantiated model');
     t.end();
 });
+
+test('Bug 20. Should prevent duplicate items when using non-standard idAttribute', function (t) {
+    var data = [{_id: '2'}];
+    var Model = State.extend({
+        idAttribute: '_id',
+        props: {
+            _id: 'string'
+        }
+    });
+    var C = Collection.extend({
+        model: Model
+    });
+    var c = new C();
+
+    c.reset(data);
+    c.add(data);
+    t.equal(c.length, 1, 'should have detected the dupe and not added');
+    t.end();
+});
+
+test('Bug 19. Should set mainIndex from model if supplied', function (t) {
+    var Model = State.extend({
+        idAttribute: '_id',
+        props: {
+            _id: 'string'
+        }
+    });
+    var C = Collection.extend({
+        model: Model
+    });
+
+    var c = new C();
+    t.equal(c.mainIndex, '_id', 'should have set mainIndex off of model');
+
+    var c2 = new Collection();
+    t.equal(c2.mainIndex, 'id', 'mainIndex should default to `id`');
+
+    t.end();
+});

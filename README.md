@@ -127,9 +127,15 @@ var people = new AmpersandCollection([{ name: 'phil' }, { name: 'bob' }, { name:
 
 ### mainIndex `collection.mainIndex`
 
-Specify which key on your models should be used as their main unique identifier. Defaults to `id`. This is the default key that [`get`](#ampersand-collection-get) will use to retrieve models by, as well as the key add/set/remove will compare to determine whether a model exists in the collection or not.
+Specify which property on your models should be used by the collection as the main index and unique identifier for the models/objects it holds. This is the property that [`get`](#ampersand-collection-get) will use to retrieve models by and what `add`, `set`, and `remove` will use to determine whether a model already exists in the collection or not. 
 
-If your server does not use `id` as the model identifier, you would typically override this when extending AmpersandCollection, like so:
+If you specify a [`model`](http://ampersandjs.com/docs#ampersand-collection-model) property in the collection and that model specifies an [`idAttribute`](http://ampersandjs.com/docs#ampersand-state-idattribute) the collection will use *that* as the `mainIndex` unless you set it to something else explicitly.
+
+If *no* `mainIndex` or `model` is specified `"id"` is used as the default `mainIndex`.
+
+This means, that *most* of the time you don't need to set `mainIndex` and things will still Just Work™.
+
+But if you wish, you may set it while extending AmpersandCollection like so:
 
 ```javascript
 var People = AmpersandCollection.extend({

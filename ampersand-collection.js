@@ -10,6 +10,10 @@ function Collection(models, options) {
     if (options.model) this.model = options.model;
     if (options.comparator) this.comparator = options.comparator;
     if (options.parent) this.parent = options.parent;
+    if (!this.mainIndex) {
+        var idAttribute = this.model && this.model.prototype && this.model.prototype.idAttribute;
+        this.mainIndex = idAttribute || 'id';
+    }
     this._reset();
     this.initialize.apply(this, arguments);
     if (models) this.reset(models, extend({silent: true}, options));
@@ -17,8 +21,6 @@ function Collection(models, options) {
 
 extend(Collection.prototype, BackboneEvents, {
     initialize: function () {},
-
-    mainIndex: 'id',
 
     indexes: [],
 
@@ -82,7 +84,7 @@ extend(Collection.prototype, BackboneEvents, {
             // If a duplicate is found, prevent it from being added and
             // optionally merge it into the existing model.
             if (existing = this.get(id)) {
-                if (remove) modelMap[existing.cid || existing.id] = true;
+                if (remove) modelMap[existing.cid || existing[this.mainIndex]] = true;
                 if (merge) {
                     attrs = attrs === model ? model.attributes : attrs;
                     if (options.parse) attrs = existing.parse(attrs, options);
@@ -108,15 +110,15 @@ extend(Collection.prototype, BackboneEvents, {
             // Do not add multiple models with the same `id`.
             model = existing || model;
             if (!model) continue;
-            if (order && ((model.isNew && model.isNew() || !model.id) || !modelMap[model.cid || model.id])) order.push(model);
-            modelMap[model.id] = true;
+            if (order && ((model.isNew && model.isNew() || !model[this.mainIndex]) || !modelMap[model.cid || model[this.mainIndex]])) order.push(model);
+            modelMap[model[this.mainIndex]] = true;
         }
 
         // Remove nonexistent models if appropriate.
         if (remove) {
             for (i = 0, length = this.length; i < length; i++) {
                 model = this.models[i];
-                if (!modelMap[model.cid || model.id]) toRemove.push(model);
+                if (!modelMap[model.cid || model[this.mainIndex]]) toRemove.push(model);
             }
             if (toRemove.length) this.remove(toRemove, options);
         }
@@ -300,7 +302,7 @@ extend(Collection.prototype, BackboneEvents, {
     _onModelEvent: function (event, model, collection, options) {
         if ((event === 'add' || event === 'remove') && collection !== this) return;
         if (event === 'destroy') this.remove(model, options);
-        if (model && event === 'change:' + model.idAttribute) {
+        if (model && event === 'change:' + this.mainIndex) {
             this._deIndex(model);
             this._index(model);
         }
