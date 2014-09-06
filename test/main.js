@@ -322,3 +322,34 @@ test('Bug 19. Should set mainIndex from model if supplied', function (t) {
 
     t.end();
 });
+
+test('add with validate:true enforces validation', function (t) {
+    t.plan(5);
+
+    var Model = State.extend({
+        idAttribute: '_id',
+        props: {
+            _id: 'string'
+        },
+        validate: function (attributes) {
+            return 'fail';
+        }
+    });
+    var C = Collection.extend({
+        model: Model
+    });
+
+    var c = new C();
+
+    c.on('invalid', function (collection, error, options) {
+        t.equal(c, collection);
+        t.equal(error, 'fail');
+        t.equal(options.validate, true);
+    });
+
+    var result = c.add({_id: 'a'}, {validate: true});
+    t.equal(c.length, 0);
+    t.equal(result, false);
+
+    t.end();
+});
