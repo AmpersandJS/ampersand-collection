@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "ampersand-class-extend": "^1.0.0",
+    "ampersand-state": "^4.3.10",
     "backbone-events-standalone": "0.2.2",
     "extend-object": "^1.0.0",
     "is-array": "^1.0.1"

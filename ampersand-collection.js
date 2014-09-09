@@ -1,3 +1,4 @@
+var AmpersandState = require('ampersand-state');
 var BackboneEvents = require('backbone-events-standalone');
 var classExtend = require('ampersand-class-extend');
 var isArray = require('is-array');
@@ -5,22 +6,53 @@ var extend = require('extend-object');
 var slice = [].slice;
 
 
-function Collection(models, options) {
-    options || (options = {});
-    if (options.model) this.model = options.model;
-    if (options.comparator) this.comparator = options.comparator;
-    if (options.parent) this.parent = options.parent;
+function BaseCollection(models, options) {
+    //Don't want state to call initialize yet
+    var initialize = this.initialize;
+    this.initiaize = function () {};
+    AmpersandState.call(this, models, options);
+    this.initialize = initialize;
+
+    if (options && options.comparator) { this.comparator = options.comparator; }
+    if (options && options.model) { this.model = options.model; }
+    if (options && options.parent) { this.parent = options.parent; }
     if (!this.mainIndex) {
         var idAttribute = this.model && this.model.prototype && this.model.prototype.idAttribute;
         this.mainIndex = idAttribute || 'id';
     }
+
     this._reset();
     this.initialize.apply(this, arguments);
     if (models) this.reset(models, extend({silent: true}, options));
 }
 
-extend(Collection.prototype, BackboneEvents, {
-    initialize: function () {},
+extend(BaseCollection.prototype, AmpersandState.prototype);
+BaseCollection.extend = AmpersandState.extend;
+
+var Collection = BaseCollection.extend({
+    props: {
+        models: ['array', true],
+        _indexes: ['object', true],
+        parent: 'any',
+        length: ['number', true, 0]
+    },
+
+    session: {
+        '&add': ['number', true, 0],
+        '&remove': ['number', true, 0]
+    },
+
+    initialize: function (models, options) {
+        if (options && options.comparator) { this.comparator = options.comparator; }
+        if (options && options.model) { this.model = options.model; }
+        if (options && options.parent) { this.parent = options.parent; }
+        if (!this.mainIndex) {
+            var idAttribute = this.model && this.model.prototype && this.model.prototype.idAttribute;
+            this.mainIndex = idAttribute || 'id';
+        }
+        this._reset();
+        if (models) this.reset(models, extend({silent: true}, options));
+    },
 
     indexes: [],
 
@@ -29,7 +61,7 @@ extend(Collection.prototype, BackboneEvents, {
     },
 
     add: function (models, options) {
-        return this.set(models, extend({merge: false, add: true, remove: false}, options));
+        return this.collSet(models, extend({merge: false, add: true, remove: false}, options));
     },
 
     // overridable parse method
@@ -55,7 +87,7 @@ extend(Collection.prototype, BackboneEvents, {
         return this.serialize();
     },
 
-    set: function (models, options) {
+    collSet: function (models, options) {
         options = extend({add: true, remove: true, merge: true}, options);
         if (options.parse) models = this.parse(models, options);
         var singular = !isArray(models);
@@ -68,6 +100,8 @@ extend(Collection.prototype, BackboneEvents, {
         var add = options.add, merge = options.merge, remove = options.remove;
         var order = !sortable && add && remove ? [] : false;
         var targetProto = this.model && this.model.prototype || Object.prototype;
+
+        var startLength = this.length;
 
         // Turn bare objects into model references, and prevent invalid models
         // from being added.
@@ -150,10 +184,14 @@ extend(Collection.prototype, BackboneEvents, {
                 } else {
                     this.trigger('add', model, this, options);
                 }
+                this['&add'] +=1;
             }
             if (sort || (order && order.length)) this.trigger('sort', this, options);
         }
 
+        if (this.models.length !== startLength) {
+            this.length = this.models.length;
+        }
         // Return the added (or merged) model (or models).
         return singular ? models[0] : models;
     },
@@ -188,6 +226,7 @@ extend(Collection.prototype, BackboneEvents, {
                 } else {
                     this.trigger('remove', model, this, options);
                 }
+                this['&remove'] +=1;
             }
             this._removeReference(model, options);
         }
@@ -311,11 +350,6 @@ extend(Collection.prototype, BackboneEvents, {
 });
 
 Object.defineProperties(Collection.prototype, {
-    length: {
-        get: function () {
-            return this.models.length;
-        }
-    },
     isCollection: {
         value: true
     }
@@ -341,7 +375,5 @@ arrayMethods.forEach(function (method) {
 
 // alias each/forEach for maximum compatibility
 Collection.prototype.each = Collection.prototype.forEach;
-
-Collection.extend = classExtend;
 
 module.exports = Collection;

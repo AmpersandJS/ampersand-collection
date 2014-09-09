@@ -17,7 +17,6 @@ test('basics', function (t) {
     t.equals(c.at(0), obj);
     t.end();
 });
-
 test('indexes: should do `id` by default', function (t) {
     var c = new Collection();
     var obj = {id: '47'};
@@ -52,6 +51,7 @@ test('models: support for model constructors', function (t) {
     var C = Collection.extend({
         model: Model
     });
+
     var m = new Model({name: 'moe'});
     var plain = {name: 'moe'};
     var c = new C();
@@ -175,18 +175,18 @@ test('should store reference to parent instance if passed', function (t) {
 test('`set` should remove models that aren\'t there', function (t) {
     var c = new Collection();
     c.model = Stooge;
-    c.set([{name: 'moe', id: '1'}, {name: 'larry', id: '2'}, {name: 'curly', id: '3'}]);
+    c.collSet([{name: 'moe', id: '1'}, {name: 'larry', id: '2'}, {name: 'curly', id: '3'}]);
     t.equal(c.length, 3, 'should have 3 stooges');
-    c.set([{name: 'moe', id: '1'}, {name: 'larry', id: '2'}]);
+    c.collSet([{name: 'moe', id: '1'}, {name: 'larry', id: '2'}]);
     t.equal(c.length, 2, 'should have 2 stooges left');
     t.end();
 });
 
 test('`set` method should work for simple objects too', function (t) {
     var c = new Collection();
-    c.set([{id: 'thing'}, {id: 'other'}]);
+    c.collSet([{id: 'thing'}, {id: 'other'}]);
     t.equal(c.length, 2, 'should have two items');
-    c.set([{id: 'thing', other: 'property'}], {remove: true});
+    c.collSet([{id: 'thing', other: 'property'}], {remove: true});
     t.equal(c.length, 1, 'should have one item');
     var first = c.at(0);
     t.equal(first.id, 'thing');
@@ -196,9 +196,9 @@ test('`set` method should work for simple objects too', function (t) {
 
 test('`set` method should work for simple objects without ids', function (t) {
     var c = new Collection();
-    c.set([{some: 'thing'}, {random: 'other'}]);
+    c.collSet([{some: 'thing'}, {random: 'other'}]);
     t.equal(c.length, 2, 'should have two items');
-    c.set([{other: 'third'}], {remove: false});
+    c.collSet([{other: 'third'}], {remove: false});
     t.equal(c.length, 3);
     var first = c.at(0);
     t.equal(first.some, 'thing');
@@ -207,7 +207,7 @@ test('`set` method should work for simple objects without ids', function (t) {
 
 test('Proxy `Array.prototype` methods', function (t) {
     var c = new Collection();
-    c.set([{id: 'thing'}, {id: 'other'}]);
+    c.collSet([{id: 'thing'}, {id: 'other'}]);
     var ids = c.map(function (item) {
         return item.id;
     });
@@ -227,7 +227,7 @@ test('Proxy `Array.prototype` methods', function (t) {
 
 test('Serialize/toJSON method', function (t) {
     var c = new Collection();
-    c.set([{id: 'thing'}, {id: 'other'}]);
+    c.collSet([{id: 'thing'}, {id: 'other'}]);
     t.deepEqual([{id: 'thing'}, {id: 'other'}], c.serialize());
     t.equal(JSON.stringify([{id: 'thing'}, {id: 'other'}]), JSON.stringify(c));
     t.end();
@@ -319,6 +319,44 @@ test('Bug 19. Should set mainIndex from model if supplied', function (t) {
 
     var c2 = new Collection();
     t.equal(c2.mainIndex, 'id', 'mainIndex should default to `id`');
+
+    t.end();
+});
+
+test('should have length events', function (t) {
+    var c = new Collection();
+    c.on('change:length', function (coll, length) {
+        t.equal(coll, c);
+        t.equal(length, 1);
+        t.end();
+    });
+
+    c.add({ foo: 'bar' });
+});
+
+test('should have derived props', function (t) {
+    var C = Collection.extend({
+        derived: {
+            totalArea: {
+                deps: ['&add', '&remove', 'area'],
+                fn: function () {
+                    return this.reduce(function (sum, model) {
+                        return sum + model.area;
+                    }, 0);
+                }
+            }
+        }
+    });
+
+    var c = new C([{ id: 1, area: 1 }, { id: 2, area: 2 }]);
+
+    t.equal(c.totalArea, 3);
+
+    c.add({ id: 3, area: 3 });
+    t.equal(c.totalArea, 6);
+
+    c.remove(1);
+    t.equal(c.totalArea, 5);
 
     t.end();
 });
