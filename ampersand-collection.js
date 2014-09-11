@@ -268,7 +268,10 @@ extend(Collection.prototype, BackboneEvents, {
         } else {
             options = options ? extend({}, options) : {};
             options.collection = this;
-            return new this.model(attrs, options);
+            var model = new this.model(attrs, options);
+            if (!model.validationError) return model;
+            this.trigger('invalid', this, model.validationError, options);
+            return false;
         }
     },
 
