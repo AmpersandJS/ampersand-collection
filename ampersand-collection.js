@@ -264,6 +264,7 @@ extend(Collection.prototype, BackboneEvents, {
         if (!this.model) return attrs;
 
         if (this.isModel(attrs)) {
+            if (!attrs.collection) attrs.collection = this;
             return attrs;
         } else {
             options = options ? extend({}, options) : {};
