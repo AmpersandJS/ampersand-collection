@@ -216,16 +216,22 @@ extend(Collection.prototype, BackboneEvents, {
         options || (options = {});
 
         if (typeof this.comparator === 'string') {
+            var sortDirection = 1,
+                comparator = self.comparator;
+            if (comparator.indexOf('-') === 0){
+                sortDirection = -1;
+                comparator = comparator.slice(1);
+            }
             this.models.sort(function (left, right) {
                 if (left.get) {
-                    left = left.get(self.comparator);
-                    right = right.get(self.comparator);
+                    left = left.get(comparator);
+                    right = right.get(comparator);
                 } else {
-                    left = left[self.comparator];
-                    right = right[self.comparator];
+                    left = left[comparator];
+                    right = right[comparator];
                 }
-                if (left > right || left === void 0) return 1;
-                if (left < right || right === void 0) return -1;
+                if (left > right || left === void 0) return 1 * sortDirection;
+                if (left < right || right === void 0) return -1 * sortDirection;
                 return 0;
             });
         } else if (this.comparator.length === 1) {
