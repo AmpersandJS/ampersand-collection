@@ -322,7 +322,7 @@ The base AmpersandCollection proxies some basic ES5 methods to the underlying mo
 * reduce
 * reduceRight
 
-Unlike a backbone collection it does not include underscore and all the array methods from underscore, though if you wish more functions than those built into modern browsers, you can mixin [ampersand-collection-underscore-mixin](#ampersand-collection-underscore-mixin) to get them.
+Unlike a backbone collection it does not include underscore and all the array methods from underscore, though if you wish more functions than those built into modern browsers, you can mixin [ampersand-collection-underscore-mixin](https://github.com/AmpersandJS/ampersand-collection-underscore-mixin) to get them.
 
 ```javascript
 var people = People([
