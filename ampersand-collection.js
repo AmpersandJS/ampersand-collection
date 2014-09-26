@@ -7,11 +7,9 @@ var slice = [].slice;
 
 
 function BaseCollection(models, options) {
-    //Don't want state to call initialize yet
-    var initialize = this.initialize;
-    this.initiaize = function () {};
-    AmpersandState.call(this, models, options);
-    this.initialize = initialize;
+    options = options || {};
+    options.init = false;
+    AmpersandState.call(this, {}, options);
 
     if (options && options.comparator) { this.comparator = options.comparator; }
     if (options && options.model) { this.model = options.model; }
@@ -29,17 +27,41 @@ function BaseCollection(models, options) {
 extend(BaseCollection.prototype, AmpersandState.prototype);
 BaseCollection.extend = AmpersandState.extend;
 
+//Object.defineProperties(BaseCollection.prototype, {
+//    attributes: {
+//        get: function () {
+//            return this.getAttributes({props: true, session: true});
+//        }
+//    },
+//    all: {
+//        get: function () {
+//            return this.getAttributes({
+//                session: true,
+//                props: true,
+//                derived: true
+//            });
+//        }
+//    },
+//    isState: {
+//        get: function () { return true; },
+//        set: function () { }
+//    }
+//});
+
 var Collection = BaseCollection.extend({
     props: {
         models: ['array', true],
         _indexes: ['object', true],
         parent: 'any',
-        length: ['number', true, 0]
     },
 
-    session: {
-        '&add': ['number', true, 0],
-        '&remove': ['number', true, 0]
+    derived: {
+        length: {
+            deps: ['models'],
+            fn: function () {
+                return this.models.length;
+            }
+        }
     },
 
     initialize: function (models, options) {
@@ -184,13 +206,14 @@ var Collection = BaseCollection.extend({
                 } else {
                     this.trigger('add', model, this, options);
                 }
-                this['&add'] +=1;
+                this.trigger('change:models', this, this.models, options);
             }
             if (sort || (order && order.length)) this.trigger('sort', this, options);
         }
 
         if (this.models.length !== startLength) {
-            this.length = this.models.length;
+            //this.length = this.models.length;
+            this.trigger('change:models', this, this.models, options);
         }
         // Return the added (or merged) model (or models).
         return singular ? models[0] : models;
@@ -226,7 +249,7 @@ var Collection = BaseCollection.extend({
                 } else {
                     this.trigger('remove', model, this, options);
                 }
-                this['&remove'] +=1;
+                this.trigger('change:models', this, this.models, options);
             }
             this._removeReference(model, options);
         }

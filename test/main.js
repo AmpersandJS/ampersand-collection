@@ -338,7 +338,7 @@ test('should have derived props', function (t) {
     var C = Collection.extend({
         derived: {
             totalArea: {
-                deps: ['&add', '&remove', 'area'],
+                deps: ['models', 'area'],
                 fn: function () {
                     return this.reduce(function (sum, model) {
                         return sum + model.area;
