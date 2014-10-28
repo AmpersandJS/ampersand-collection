@@ -284,6 +284,18 @@ test('Bug 14. Should prevent duplicate items when using non-standard idAttribute
     t.end();
 });
 
+test('Should prevent duplicate items when using non-standard mainIndex without model', function (t) {
+    var C = Collection.extend({
+        mainIndex: '_id'
+    });
+    var c = new C([{_id: '2'}, {_id: '2'}, {_id: '2'}]);
+
+    t.equal(c.length, 1, 'should still be 1');
+    c.add({_id: '2'});
+    t.equal(c.length, 1, 'should still be 1 if added later');
+    t.end();
+});
+
 test('Bug 20. Should prevent duplicate items when using non-standard idAttribute', function (t) {
     var data = [{_id: '2'}];
     var Model = State.extend({
