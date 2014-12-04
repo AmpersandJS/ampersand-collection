@@ -247,7 +247,7 @@ vanHalen.set([eddie, alex, stone, hagar]);
 
 Retrieve a model from the collection by index.
 
-With an unspecified `indexName` (`collection.get(123)`) retrieves the model by it's [mainIndex](#ampersand-collection-mainindex) attribute.
+With an unspecified `indexName` (`collection.get(123)`) retrieves the model by its [mainIndex](#ampersand-collection-mainindex) attribute.
 
 Or specify an `indexName` to retrieve a model by any of the other listed [indexes](#ampersand-collection-indexes).
 
