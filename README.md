@@ -30,7 +30,7 @@ The collection is a fairly low-level tool, in that it's useful for any time you 
 
 In many ways it's simply an observable array of objects.
 
-It emits events when models are added, removed, sorted and more. I also allows for merging in a set of objects into an existing collection and emitting change events appropriately. For a detailed overview of the events that are emitted by ampersand-collection, please refer to the [Event Catalog](http://ampersandjs.com/learn/events) on the AmpersandJS learn page.
+It emits events when models are added, removed, sorted and more. It also allows for merging in a set of objects into an existing collection and emitting change events appropriately. For a detailed overview of the events that are emitted by ampersand-collection, please refer to the [Event Catalog](http://ampersandjs.com/learn/events) on the AmpersandJS learn page.
 
 If you extend it with a `.model` property that contains a constructor, the collection will ensure that objects that don't match that constructor are instantiated before being added to the collection.
 
