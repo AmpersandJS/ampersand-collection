@@ -365,3 +365,48 @@ test('add with validate:true enforces validation', function (t) {
 
     t.end();
 });
+
+test('Should not leak indexes between collections when indexes is undefined', function (t) {
+    var data = [{id: 4, name: 'me'}];
+    var C = Collection.extend({
+        mainIndex: 'id'
+    });
+
+    var D = Collection.extend({
+        mainIndex: 'name'
+    });
+    var c = new C();
+    var d = new D();
+
+    c.reset(data);
+    d.reset(data);
+
+    t.ok(c.get(4), 'should get by mainIndex');
+    t.ok(d.get('me'), 'should get by mainIndex');
+    // t.ok(d.get(4, 'id'), 'should get by secondary index');
+    t.notOk(c.get('me', 'name'), 'should throw and error for invalid index');
+    t.notOk(d.get(4, 'me'), 'should throw and error for invalid index');
+    t.equal(d.get('me'), d.at(0), 'should get the same model by different indexes');
+    t.end();
+});
+
+test('should be able to get a model with an idAttribute of 0', function (t) {
+    var C = Collection.extend({
+        mainIndex: 'id',
+        indexes: ['username']
+    });
+    var c = new C();
+    var moe = {id: 0, username: 'moe'};
+    var curly = {id: 1, username: 'curly'};
+    c.add([moe, curly]);
+
+    // t.equal(moe, c.get('moe', 'username'));
+    t.ok(c.get(1), 'should get by id:1');
+    t.ok(c.get('curly', 'username'), 'should get by secondary index');
+    t.ok(c.get('moe', 'username'), 'should get by secondary index');
+    t.ok(c._indexes.id[0], 'should get by id:0');
+    t.ok(c.get(0, 'id'), 'should get by id:0');
+    t.ok(c.get(0), 'should get by id:0');
+    t.equal(moe, c.get(0));
+    t.end();
+});
