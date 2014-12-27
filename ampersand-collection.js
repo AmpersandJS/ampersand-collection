@@ -276,7 +276,7 @@ extend(Collection.prototype, BackboneEvents, {
 
     _deIndex: function (model) {
         for (var name in this._indexes) {
-            delete this._indexes[name][model[name] || (model.get && model.get(name))];
+            delete this._indexes[name][model.hasOwnProperty(name) ? model[name] : (model.get && model.get(name))];
         }
     },
 

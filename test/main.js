@@ -390,7 +390,7 @@ test('Should not leak indexes between collections when indexes is undefined', fu
     t.end();
 });
 
-test('should be able to get a model with an idAttribute of 0', function (t) {
+test('should be able to get/remove a model with an idAttribute of 0', function (t) {
     var C = Collection.extend({
         mainIndex: 'id',
         indexes: ['username']
@@ -408,5 +408,9 @@ test('should be able to get a model with an idAttribute of 0', function (t) {
     t.ok(c.get(0, 'id'), 'should get by id:0');
     t.ok(c.get(0), 'should get by id:0');
     t.equal(moe, c.get(0));
+
+    c.remove(0);
+    t.notOk(c.get(0), 'should remove by id:0');
+
     t.end();
 });
