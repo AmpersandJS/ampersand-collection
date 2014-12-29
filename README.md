@@ -80,7 +80,7 @@ In order to deal with this (because sometimes this is a legitimate scenario), `c
 
 Create a collection class of your own by extending AmpersandCollection, providing the required instance properties to be attached instances of your class.
 
-Typically you will specify a `model` constructor (if you are storing [ampersand-state](#ampersand-state) or [ampersand-model](#ampersand-model) objects.
+Typically you will specify a `model` constructor (if you are storing [ampersand-state](#ampersand-state) or [ampersand-model](#ampersand-model) objects).
 
 ### model `collection.model`
 
