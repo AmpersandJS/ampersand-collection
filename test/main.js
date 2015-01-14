@@ -365,3 +365,22 @@ test('add with validate:true enforces validation', function (t) {
 
     t.end();
 });
+
+test('get can be used with cid value or cid obj', function (t) {
+    t.plan(2);
+
+    var C = Collection.extend({
+        model: State.extend({
+            props: {
+                id: 'number'
+            }
+        })
+    });
+    var collection = new C([{id: 1}, {id: 2}, {id: 3}]);
+    var first = collection.at(0);
+
+    t.equal(1, collection.get(first.cid).id);
+    t.equal(1, collection.get({cid: first.cid}).id);
+
+    t.end();
+});
