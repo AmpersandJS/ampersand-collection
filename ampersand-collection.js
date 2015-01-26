@@ -304,11 +304,13 @@ extend(Collection.prototype, BackboneEvents, {
     },
 
     _onModelEvent: function (event, model, collection, options) {
+        var attribute = event.split(':')[1];
+        event = event.split(':')[0];
         if ((event === 'add' || event === 'remove') && collection !== this) return;
         if (event === 'destroy') this.remove(model, options);
-        if (model && event === 'change:' + this.mainIndex) {
-            this._deIndex(model);
-            this._index(model);
+        if (model && event === 'change' && this._indexes[attribute]) {
+			this._deIndex(model.previousAttributes());
+			this._index(model);
         }
         this.trigger.apply(this, arguments);
     }

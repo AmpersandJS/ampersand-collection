@@ -384,3 +384,31 @@ test('get can be used with cid value or cid obj', function (t) {
 
     t.end();
 });
+
+test('Bug 45. Should update indexes if an indexed attribute of a model change', function (t) {
+    t.plan(8);
+
+    var C = Collection.extend({
+        model: Stooge,
+        indexes: ['name']
+    });
+
+    var model = new Stooge({id: '1', name: 'moe'});
+    var collection = new C(model);
+
+    t.equal('1', collection.get('1').id, 'should find model with mainindex');
+    t.equal('1', collection.get('moe', 'name').id, 'should find model with other index');
+
+    model.id = '2';
+    t.equal('2', collection.get('2').id, 'should find model with new value of mainIndex');
+    t.equal(undefined, collection.get('1'), 'should not find model with old value of mainIndex');
+
+    model.name = 'larry';
+    t.equal('2', collection.get('larry', 'name').id, 'should find model with new value of other index');
+    t.equal(undefined, collection.get('moe', 'name'), 'should not find model with old value of other index');
+
+    model.unset('name');
+    t.equal('2', collection.get('2').id, 'should find model with mainIndex after unset other index');
+    t.equal(undefined, collection.get('moe', 'name'), 'should not find model with old value of other index after unset this attribute');
+    t.end();
+});
