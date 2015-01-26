@@ -276,16 +276,30 @@ extend(Collection.prototype, BackboneEvents, {
         }
     },
 
-    _deIndex: function (model) {
-        for (var name in this._indexes) {
-            delete this._indexes[name][model[name] || (model.get && model.get(name))];
+    _deIndex: function (model, attribute, value) {
+        if (undefined !== attribute) {
+            if (undefined === this._indexes[attribute]) throw new Error('Given attribute is not an index');
+            delete this._indexes[attribute][value];
+            return;
+        }
+        // Not a specific attribute
+        for (attribute in this._indexes) {
+            delete this._indexes[attribute][model[attribute] || (model.get && model.get(attribute))];
         }
     },
 
-    _index: function (model) {
-        for (var name in this._indexes) {
-            var indexVal = model[name] || (model.get && model.get(name));
-            if (indexVal) this._indexes[name][indexVal] = model;
+    _index: function (model, attribute) {
+        var indexVal;
+        if (undefined !== attribute) {
+            if (undefined === this._indexes[attribute]) throw new Error('Given attribute is not an index');
+            indexVal = model[attribute] || (model.get && model.get(attribute));
+            if (indexVal) this._indexes[attribute][indexVal] = model;
+            return;
+        }
+        // Not a specific attribute
+        for (attribute in this._indexes) {
+            indexVal = model[attribute] || (model.get && model.get(attribute));
+            if (indexVal) this._indexes[attribute][indexVal] = model;
         }
     },
 
@@ -309,8 +323,8 @@ extend(Collection.prototype, BackboneEvents, {
         if ((event === 'add' || event === 'remove') && collection !== this) return;
         if (event === 'destroy') this.remove(model, options);
         if (model && event === 'change' && this._indexes[attribute]) {
-			this._deIndex(model.previousAttributes());
-			this._index(model);
+			this._deIndex(model, attribute, model.previousAttributes()[attribute]);
+			this._index(model, attribute);
         }
         this.trigger.apply(this, arguments);
     }
