@@ -323,8 +323,8 @@ extend(Collection.prototype, BackboneEvents, {
         if ((event === 'add' || event === 'remove') && collection !== this) return;
         if (event === 'destroy') this.remove(model, options);
         if (model && event === 'change' && this._indexes[attribute]) {
-			this._deIndex(model, attribute, model.previousAttributes()[attribute]);
-			this._index(model, attribute);
+            this._deIndex(model, attribute, model.previousAttributes()[attribute]);
+            this._index(model, attribute);
         }
         this.trigger.apply(this, arguments);
     }
