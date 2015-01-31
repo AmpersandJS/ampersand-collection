@@ -366,7 +366,26 @@ test('add with validate:true enforces validation', function (t) {
     t.end();
 });
 
-test('Should not leak indexes between collections when indexes is undefined', function (t) {
+test('get can be used with cid value or cid obj', function (t) {
+    t.plan(2);
+
+    var C = Collection.extend({
+        model: State.extend({
+            props: {
+                id: 'number'
+            }
+        })
+    });
+    var collection = new C([{id: 1}, {id: 2}, {id: 3}]);
+    var first = collection.at(0);
+
+    t.equal(1, collection.get(first.cid).id);
+    t.equal(1, collection.get({cid: first.cid}).id);
+
+    t.end();
+});
+
+test('should not leak indexes between collections when indexes is undefined', function (t) {
     var data = [{id: 4, name: 'me'}];
     var C = Collection.extend({
         mainIndex: 'id'
@@ -383,9 +402,8 @@ test('Should not leak indexes between collections when indexes is undefined', fu
 
     t.ok(c.get(4), 'should get by mainIndex');
     t.ok(d.get('me'), 'should get by mainIndex');
-    // t.ok(d.get(4, 'id'), 'should get by secondary index');
-    t.notOk(c.get('me', 'name'), 'should throw and error for invalid index');
-    t.notOk(d.get(4, 'me'), 'should throw and error for invalid index');
+    t.notOk(c.get('me', 'name'), 'should be undefined for invalid index');
+    t.notOk(d.get(4, 'me'), 'should throw an error for invalid index');
     t.equal(d.get('me'), d.at(0), 'should get the same model by different indexes');
     t.end();
 });
@@ -400,7 +418,6 @@ test('should be able to get/remove a model with an idAttribute of 0', function (
     var curly = {id: 1, username: 'curly'};
     c.add([moe, curly]);
 
-    // t.equal(moe, c.get('moe', 'username'));
     t.ok(c.get(1), 'should get by id:1');
     t.ok(c.get('curly', 'username'), 'should get by secondary index');
     t.ok(c.get('moe', 'username'), 'should get by secondary index');
@@ -414,7 +431,6 @@ test('should be able to get/remove a model with an idAttribute of 0', function (
 
     t.end();
 });
-
 
 test('should check for existing by mainIndex and not model.idAttribute', function (t) {
     var C = Collection.extend({
