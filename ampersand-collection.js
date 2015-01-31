@@ -76,7 +76,7 @@ extend(Collection.prototype, BackboneEvents, {
             } else if (targetProto.generateId) {
                 id = targetProto.generateId(attrs);
             } else {
-                id = attrs[targetProto.idAttribute || this.mainIndex];
+                id = attrs[this.mainIndex];
             }
 
             // If a duplicate is found, prevent it from being added and

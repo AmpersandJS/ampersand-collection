@@ -414,3 +414,31 @@ test('should be able to get/remove a model with an idAttribute of 0', function (
 
     t.end();
 });
+
+
+test('should check for existing by mainIndex and not model.idAttribute', function (t) {
+    var C = Collection.extend({
+        mainIndex: 'name',
+        model: Stooge
+    });
+    var c = new C();
+    var moe = new Stooge({id: '0', name: 'moe'});
+    var curly = {id: '1', name: 'curly'};
+    c.add([moe, curly]);
+
+    t.notEqual(c.mainIndex, moe.idAttribute, 'mainIndex can be different than idAttribute');
+    t.equal(moe.idAttribute, 'id', 'default model attribute should be id');
+    t.equal(moe.getId(), '0', 'default model attribute should be id');
+    t.ok(c.get('curly'), 'should get model using mainIndex');
+    t.equal(c.get('moe'), moe, 'should get same model using mainIndex');
+
+    t.equal(c.length, 2, 'should be only 2 models');
+    c.add(curly);
+    t.equal(c.length, 2, 'should not add duplicate');
+    c.remove(moe);
+    t.equal(c.length, 1, 'should be able to remove model');
+    c.remove(curly);
+    t.equal(c.length, 0, 'should be able to remove model by property');
+
+    t.end();
+});
