@@ -384,3 +384,20 @@ test('get can be used with cid value or cid obj', function (t) {
 
     t.end();
 });
+
+test('get can use 0 as a query argument', function (t) {
+    t.plan(1);
+
+    var C = Collection.extend({
+        model: State.extend({
+            props: {
+                id: 'number'
+            }
+        })
+    });
+    var collection = new C([{id: 0}, {id: 1}, {id: 2}]);
+
+    t.equal(0, collection.get(0).id);
+
+    t.end();
+});
