@@ -277,20 +277,22 @@ extend(Collection.prototype, BackboneEvents, {
     },
 
     _deIndex: function (model, attribute, value) {
-        if (undefined !== attribute) {
+        var indexVal;
+        if (attribute !== undefined) {
             if (undefined === this._indexes[attribute]) throw new Error('Given attribute is not an index');
             delete this._indexes[attribute][value];
             return;
         }
         // Not a specific attribute
         for (attribute in this._indexes) {
-            delete this._indexes[attribute][model[attribute] || (model.get && model.get(attribute))];
+            indexVal = model[attribute] || (model.get && model.get(attribute));
+            delete this._indexes[attribute][indexVal];
         }
     },
 
     _index: function (model, attribute) {
         var indexVal;
-        if (undefined !== attribute) {
+        if (attribute !== undefined) {
             if (undefined === this._indexes[attribute]) throw new Error('Given attribute is not an index');
             indexVal = model[attribute] || (model.get && model.get(attribute));
             if (indexVal) this._indexes[attribute][indexVal] = model;
