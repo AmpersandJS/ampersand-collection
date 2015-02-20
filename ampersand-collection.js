@@ -1,6 +1,7 @@
 var BackboneEvents = require('backbone-events-standalone');
 var classExtend = require('ampersand-class-extend');
 var isArray = require('is-array');
+var bind = require('amp-bind');
 var extend = require('extend-object');
 var slice = [].slice;
 
@@ -237,7 +238,7 @@ extend(Collection.prototype, BackboneEvents, {
                 return 0;
             });
         } else {
-            this.models.sort(this.comparator.bind(this));
+            this.models.sort(bind(this.comparator,this));
         }
 
         if (!options.silent) this.trigger('sort', this, options);

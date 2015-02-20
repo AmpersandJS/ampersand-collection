@@ -165,6 +165,22 @@ test('comparator as standard 2 arg sort function', function (t) {
     t.end();
 });
 
+test('comparator as 2 arg has ref to "this"', function(t){
+    var boundCollection;
+    var Coll = Collection.extend({
+        comparator: function (m1, m2) {
+            boundCollection = this;
+            return 0;
+        }
+    });
+    var c = new Coll();
+    var moe = new Stooge({name: 'moe', id: '1'});
+    var larry = new Stooge({name: 'larry', id: '2'});
+    c.add([moe, larry]);
+    t.equal(c,boundCollection);
+    t.end();
+});
+
 test('should store reference to parent instance if passed', function (t) {
     var parent = {};
     var c = new Collection([], {parent: parent});
