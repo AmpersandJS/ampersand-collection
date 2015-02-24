@@ -6,6 +6,7 @@
     "url": "https://github.com/ampersandjs/ampersand-collection/issues"
   },
   "dependencies": {
+    "amp-bind": "^1.0.1",
     "ampersand-class-extend": "^1.0.0",
     "backbone-events-standalone": "0.2.2",
     "extend-object": "^1.0.0",
