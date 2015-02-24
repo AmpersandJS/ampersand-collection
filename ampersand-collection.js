@@ -160,7 +160,7 @@ extend(Collection.prototype, BackboneEvents, {
     },
 
     get: function (query, indexName) {
-        if (!query) return;
+        if (query == null) return;
         var index = this._indexes[indexName || this.mainIndex];
         return index[query] || index[query[this.mainIndex]] || this._indexes.cid[query] || this._indexes.cid[query.cid];
     },
@@ -286,7 +286,7 @@ extend(Collection.prototype, BackboneEvents, {
     _index: function (model) {
         for (var name in this._indexes) {
             var indexVal = model[name] || (model.get && model.get(name));
-            if (indexVal) this._indexes[name][indexVal] = model;
+            if (indexVal != null) this._indexes[name][indexVal] = model;
         }
     },
 
