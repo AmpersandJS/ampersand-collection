@@ -400,3 +400,77 @@ test('get can be used with cid value or cid obj', function (t) {
 
     t.end();
 });
+
+test('should not leak indexes between collections when indexes is undefined', function (t) {
+    var data = [{id: 4, name: 'me'}];
+    var C = Collection.extend({
+        mainIndex: 'id'
+    });
+
+    var D = Collection.extend({
+        mainIndex: 'name'
+    });
+    var c = new C();
+    var d = new D();
+
+    c.reset(data);
+    d.reset(data);
+
+    t.ok(c.get(4), 'should get by mainIndex');
+    t.ok(d.get('me'), 'should get by mainIndex');
+    t.notOk(c.get('me', 'name'), 'should be undefined for invalid index');
+    t.notOk(d.get(4, 'me'), 'should throw an error for invalid index');
+    t.equal(d.get('me'), d.at(0), 'should get the same model by different indexes');
+    t.end();
+});
+
+test('should be able to get/remove a model with an idAttribute of 0', function (t) {
+    var C = Collection.extend({
+        mainIndex: 'id',
+        indexes: ['username']
+    });
+    var c = new C();
+    var moe = {id: 0, username: 'moe'};
+    var curly = {id: 1, username: 'curly'};
+    c.add([moe, curly]);
+
+    t.ok(c.get(1), 'should get by id:1');
+    t.ok(c.get('curly', 'username'), 'should get by secondary index');
+    t.ok(c.get('moe', 'username'), 'should get by secondary index');
+    t.ok(c._indexes.id[0], 'should get by id:0');
+    t.ok(c.get(0, 'id'), 'should get by id:0');
+    t.ok(c.get(0), 'should get by id:0');
+    t.equal(moe, c.get(0));
+
+    c.remove(0);
+    t.notOk(c.get(0), 'should remove by id:0');
+
+    t.end();
+});
+
+test('should check for existing by mainIndex and not model.idAttribute', function (t) {
+    var C = Collection.extend({
+        mainIndex: 'name',
+        model: Stooge
+    });
+    var c = new C();
+    var moe = new Stooge({id: '0', name: 'moe'});
+    var curly = {id: '1', name: 'curly'};
+    c.add([moe, curly]);
+
+    t.notEqual(c.mainIndex, moe.idAttribute, 'mainIndex can be different than idAttribute');
+    t.equal(moe.idAttribute, 'id', 'default model attribute should be id');
+    t.equal(moe.getId(), '0', 'default model attribute should be id');
+    t.ok(c.get('curly'), 'should get model using mainIndex');
+    t.equal(c.get('moe'), moe, 'should get same model using mainIndex');
+
+    t.equal(c.length, 2, 'should be only 2 models');
+    c.add(curly);
+    t.equal(c.length, 2, 'should not add duplicate');
+    c.remove(moe);
+    t.equal(c.length, 1, 'should be able to remove model');
+    c.remove(curly);
+    t.equal(c.length, 0, 'should be able to remove model by property');
+
+    t.end();
+});

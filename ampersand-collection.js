@@ -23,8 +23,6 @@ function Collection(models, options) {
 extend(Collection.prototype, BackboneEvents, {
     initialize: function () {},
 
-    indexes: [],
-
     isModel: function (model) {
         return this.model && model instanceof this.model;
     },
@@ -79,7 +77,7 @@ extend(Collection.prototype, BackboneEvents, {
             } else if (targetProto.generateId) {
                 id = targetProto.generateId(attrs);
             } else {
-                id = attrs[targetProto.idAttribute || this.mainIndex];
+                id = attrs[this.mainIndex];
             }
 
             // If a duplicate is found, prevent it from being added and
@@ -160,9 +158,9 @@ extend(Collection.prototype, BackboneEvents, {
     },
 
     get: function (query, indexName) {
-        if (!query) return;
+        if (query == null) return;
         var index = this._indexes[indexName || this.mainIndex];
-        return index[query] || index[query[this.mainIndex]] || this._indexes.cid[query] || this._indexes.cid[query.cid];
+        return (index && (index[query] || index[query[this.mainIndex]])) || this._indexes.cid[query] || this._indexes.cid[query.cid];
     },
 
     // Get the model at the given index.
@@ -248,7 +246,7 @@ extend(Collection.prototype, BackboneEvents, {
     // Private method to reset all internal state. Called when the collection
     // is first initialized or reset.
     _reset: function () {
-        var list = this.indexes || [];
+        var list = slice.call(this.indexes || []);
         var i = 0;
         list.push(this.mainIndex);
         list.push('cid');
@@ -279,14 +277,14 @@ extend(Collection.prototype, BackboneEvents, {
 
     _deIndex: function (model) {
         for (var name in this._indexes) {
-            delete this._indexes[name][model[name] || (model.get && model.get(name))];
+            delete this._indexes[name][model.hasOwnProperty(name) ? model[name] : (model.get && model.get(name))];
         }
     },
 
     _index: function (model) {
         for (var name in this._indexes) {
-            var indexVal = model[name] || (model.get && model.get(name));
-            if (indexVal) this._indexes[name][indexVal] = model;
+            var indexVal = model.hasOwnProperty(name) ? model[name] : (model.get && model.get(name));
+            if (indexVal != null) this._indexes[name][indexVal] = model;
         }
     },
 
