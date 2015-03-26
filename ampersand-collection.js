@@ -319,11 +319,12 @@ extend(Collection.prototype, AmpersandEvents, {
     },
 
     _onModelEvent: function (event, model, collection, options) {
+        var eventName = event.split(':')[0];
         var attribute = event.split(':')[1];
-        event = event.split(':')[0];
-        if ((event === 'add' || event === 'remove') && collection !== this) return;
-        if (event === 'destroy') this.remove(model, options);
-        if (model && event === 'change' && this._indexes[attribute]) {
+
+        if ((eventName === 'add' || eventName === 'remove') && collection !== this) return;
+        if (eventName === 'destroy') this.remove(model, options);
+        if (model && eventName === 'change' && attribute && this._indexes[attribute]) {
             this._deIndex(model, attribute, model.previousAttributes()[attribute]);
             this._index(model, attribute);
         }
