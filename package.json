@@ -8,12 +8,12 @@
   "dependencies": {
     "amp-bind": "^1.0.1",
     "ampersand-class-extend": "^1.0.0",
-    "backbone-events-standalone": "0.2.2",
+    "ampersand-events": "^1.0.1",
     "extend-object": "^1.0.0",
     "is-array": "^1.0.1"
   },
   "devDependencies": {
-    "ampersand-state": "0.x.x",
+    "ampersand-state": "^4.4.5",
     "precommit-hook": "0.x.x",
     "run-browser": "^1.3.1",
     "tap-spec": "^0.2.1",
