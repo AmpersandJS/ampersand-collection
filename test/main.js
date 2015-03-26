@@ -504,3 +504,21 @@ test('Bug 45. Should update indexes if an indexed attribute of a model change', 
     t.equal('2', collection.get('curly', 'name').id, 'should find model with new value of other index after unset/set');
     t.end();
 });
+
+test('Collection should rethrow change events on a model', function (t) {
+    t.plan(2);
+    var C = Collection.extend({
+        model: Stooge,
+        indexes: ['name']
+    });
+
+    var model = new Stooge({id: '1', name: 'moe'});
+    var collection = new C(model);
+
+    collection.on('change:name', function (m, newName) {
+        t.equal(m, model);
+        t.equal(newName, 'shmoe');
+    });
+
+    model.name = 'shmoe';
+});
