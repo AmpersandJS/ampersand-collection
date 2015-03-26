@@ -471,6 +471,36 @@ test('should check for existing by mainIndex and not model.idAttribute', functio
     t.equal(c.length, 1, 'should be able to remove model');
     c.remove(curly);
     t.equal(c.length, 0, 'should be able to remove model by property');
+    t.end();
+});
 
+test('Bug 45. Should update indexes if an indexed attribute of a model change', function (t) {
+    t.plan(9);
+
+    var C = Collection.extend({
+        model: Stooge,
+        indexes: ['name']
+    });
+
+    var model = new Stooge({id: '1', name: 'moe'});
+    var collection = new C(model);
+
+    t.equal('1', collection.get('1').id, 'should find model with mainindex');
+    t.equal('1', collection.get('moe', 'name').id, 'should find model with other index');
+
+    model.id = '2';
+    t.equal('2', collection.get('2').id, 'should find model with new value of mainIndex');
+    t.equal(undefined, collection.get('1'), 'should not find model with old value of mainIndex');
+
+    model.name = 'larry';
+    t.equal('2', collection.get('larry', 'name').id, 'should find model with new value of other index');
+    t.equal(undefined, collection.get('moe', 'name'), 'should not find model with old value of other index');
+
+    model.unset('name');
+    t.equal('2', collection.get('2').id, 'should find model with mainIndex after unset other index');
+    t.equal(undefined, collection.get('moe', 'name'), 'should not find model with old value of other index after unset this attribute');
+
+    model.name = 'curly';
+    t.equal('2', collection.get('curly', 'name').id, 'should find model with new value of other index after unset/set');
     t.end();
 });

@@ -275,16 +275,32 @@ extend(Collection.prototype, BackboneEvents, {
         }
     },
 
-    _deIndex: function (model) {
-        for (var name in this._indexes) {
-            delete this._indexes[name][model.hasOwnProperty(name) ? model[name] : (model.get && model.get(name))];
+    _deIndex: function (model, attribute, value) {
+        var indexVal;
+        if (attribute !== undefined) {
+            if (undefined === this._indexes[attribute]) throw new Error('Given attribute is not an index');
+            delete this._indexes[attribute][value];
+            return;
+        }
+        // Not a specific attribute
+        for (attribute in this._indexes) {
+            indexVal = model.hasOwnProperty(attribute) ? model[attribute] : (model.get && model.get(attribute));
+            delete this._indexes[attribute][indexVal];
         }
     },
 
-    _index: function (model) {
-        for (var name in this._indexes) {
-            var indexVal = model.hasOwnProperty(name) ? model[name] : (model.get && model.get(name));
-            if (indexVal != null) this._indexes[name][indexVal] = model;
+    _index: function (model, attribute) {
+        var indexVal;
+        if (attribute !== undefined) {
+            if (undefined === this._indexes[attribute]) throw new Error('Given attribute is not an index');
+            indexVal = model[attribute] || (model.get && model.get(attribute));
+            if (indexVal) this._indexes[attribute][indexVal] = model;
+            return;
+        }
+        // Not a specific attribute
+        for (attribute in this._indexes) {
+            indexVal = model.hasOwnProperty(attribute) ? model[attribute] : (model.get && model.get(attribute));
+            if (indexVal != null) this._indexes[attribute][indexVal] = model;
         }
     },
 
@@ -303,11 +319,13 @@ extend(Collection.prototype, BackboneEvents, {
     },
 
     _onModelEvent: function (event, model, collection, options) {
+        var attribute = event.split(':')[1];
+        event = event.split(':')[0];
         if ((event === 'add' || event === 'remove') && collection !== this) return;
         if (event === 'destroy') this.remove(model, options);
-        if (model && event === 'change:' + this.mainIndex) {
-            this._deIndex(model);
-            this._index(model);
+        if (model && event === 'change' && this._indexes[attribute]) {
+            this._deIndex(model, attribute, model.previousAttributes()[attribute]);
+            this._index(model, attribute);
         }
         this.trigger.apply(this, arguments);
     }
