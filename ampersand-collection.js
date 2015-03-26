@@ -1,4 +1,4 @@
-var BackboneEvents = require('backbone-events-standalone');
+var AmpersandEvents = require('ampersand-events');
 var classExtend = require('ampersand-class-extend');
 var isArray = require('is-array');
 var bind = require('amp-bind');
@@ -20,7 +20,7 @@ function Collection(models, options) {
     if (models) this.reset(models, extend({silent: true}, options));
 }
 
-extend(Collection.prototype, BackboneEvents, {
+extend(Collection.prototype, AmpersandEvents, {
     initialize: function () {},
 
     isModel: function (model) {
