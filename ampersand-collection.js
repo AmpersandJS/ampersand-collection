@@ -1,10 +1,9 @@
 var AmpersandEvents = require('ampersand-events');
 var classExtend = require('ampersand-class-extend');
-var isArray = require('is-array');
-var bind = require('amp-bind');
-var extend = require('extend-object');
+var isArray = require('lodash.isarray');
+var bind = require('lodash.bind');
+var assign = require('lodash.assign');
 var slice = [].slice;
-
 
 function Collection(models, options) {
     options || (options = {});
@@ -17,10 +16,10 @@ function Collection(models, options) {
     }
     this._reset();
     this.initialize.apply(this, arguments);
-    if (models) this.reset(models, extend({silent: true}, options));
+    if (models) this.reset(models, assign({silent: true}, options));
 }
 
-extend(Collection.prototype, AmpersandEvents, {
+assign(Collection.prototype, AmpersandEvents, {
     initialize: function () {},
 
     isModel: function (model) {
@@ -28,7 +27,7 @@ extend(Collection.prototype, AmpersandEvents, {
     },
 
     add: function (models, options) {
-        return this.set(models, extend({merge: false, add: true, remove: false}, options));
+        return this.set(models, assign({merge: false, add: true, remove: false}, options));
     },
 
     // overridable parse method
@@ -43,7 +42,7 @@ extend(Collection.prototype, AmpersandEvents, {
                 return model.serialize();
             } else {
                 var out = {};
-                extend(out, model);
+                assign(out, model);
                 delete out.collection;
                 return out;
             }
@@ -55,7 +54,7 @@ extend(Collection.prototype, AmpersandEvents, {
     },
 
     set: function (models, options) {
-        options = extend({add: true, remove: true, merge: true}, options);
+        options = assign({add: true, remove: true, merge: true}, options);
         if (options.parse) models = this.parse(models, options);
         var singular = !isArray(models);
         models = singular ? (models ? [models] : []) : models.slice();
@@ -93,7 +92,7 @@ extend(Collection.prototype, AmpersandEvents, {
                         if (sortable && !sort && existing.hasChanged(sortAttr)) sort = true;
                     } else {
                         // if not just update the properties
-                        extend(existing, attrs);
+                        assign(existing, attrs);
                     }
                 }
                 models[i] = existing;
@@ -204,7 +203,7 @@ extend(Collection.prototype, AmpersandEvents, {
         }
         options.previousModels = this.models;
         this._reset();
-        models = this.add(models, extend({silent: true}, options));
+        models = this.add(models, assign({silent: true}, options));
         if (!options.silent) this.trigger('reset', this, options);
         return models;
     },
@@ -266,7 +265,7 @@ extend(Collection.prototype, AmpersandEvents, {
             if (!attrs.collection) attrs.collection = this;
             return attrs;
         } else {
-            options = options ? extend({}, options) : {};
+            options = options ? assign({}, options) : {};
             options.collection = this;
             var model = new this.model(attrs, options);
             if (!model.validationError) return model;
