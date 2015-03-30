@@ -1,12 +1,12 @@
 {
   "name": "ampersand-collection",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "author": "Henrik Joreteg <henrik@andyet.net>",
   "bugs": {
     "url": "https://github.com/ampersandjs/ampersand-collection/issues"
   },
   "files": [
-      "ampersand-collection.js"
+    "ampersand-collection.js"
   ],
   "dependencies": {
     "ampersand-class-extend": "^1.0.0",
