@@ -156,7 +156,8 @@ var People = AmpersandCollection.extend({
     indexes: ['otherId']
 });
 
-var people = new People.add([
+var people = new People();
+people.add([
     { _id: 1, otherId: 'a', name: 'Phil' },
     { _id: 2, otherId: 'b', name: 'Julie' },
     { _id: 3, otherId: 'c', name: 'Henrik' },
