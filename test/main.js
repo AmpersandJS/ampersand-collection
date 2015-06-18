@@ -545,10 +545,12 @@ test('Collection should call toJSON-func on a model during it\' own serialize-fu
     },{
         test1: true
     }]);
-    var obj = a.toJSON();
+    var json = a.toJSON();
 
     t.equal(a.models[0].check, true);
     t.equal(a.models[1].check, true);
+    t.deepEqual(json[0],a.models[0].serialize());
+    t.deepEqual(json[1],a.models[1].serialize());
 
     t.end();
 });
