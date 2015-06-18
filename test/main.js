@@ -522,3 +522,33 @@ test('Collection should rethrow change events on a model', function (t) {
 
     model.name = 'shmoe';
 });
+
+test('Collection should call toJSON-func on a model during it\' own serialize-func', function (t) {
+    var MyChild = State.extend({
+        props: {
+            test1: ['boolean', true, true],
+        },
+        session: {
+            check: ['boolean', true, false],
+        },
+        toJSON: function () {
+            this.check = true;
+            return this.serialize();
+        }
+    });
+    var MyCollection = Collection.extend({
+        model: MyChild
+    });
+
+    var a = new MyCollection([{
+        test1: true
+    },{
+        test1: true
+    }]);
+    var obj = a.toJSON();
+
+    t.equal(a.models[0].check, true);
+    t.equal(a.models[1].check, true);
+
+    t.end();
+});
