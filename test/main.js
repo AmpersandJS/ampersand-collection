@@ -522,3 +522,42 @@ test('Collection should rethrow change events on a model', function (t) {
 
     model.name = 'shmoe';
 });
+
+
+test('Add a postInitialize-functionality over States and Collections, Children and subCollections', function (t) {
+    var result = [];
+    /**** Model Test *****/
+    var MyModel = State.extend({
+        props: {
+            val: 'number'
+        },
+        initialize: function() {
+            result.push(this.val);
+        },
+        postInitialize: function() {
+            result.push(this.val);
+        }
+    });
+
+    /**** Collection Test *****/
+    var MyCollection = Collection.extend({
+        model: MyModel,
+        initialize: function() {
+            result.push(-1);
+        },
+        postInitialize: function() {
+            result.push(-1);
+        }
+    });
+
+    var a = new MyCollection([{
+        val: 0
+    }, {
+        val: 1
+    }, {
+        val: 2
+    }]);
+    t.deepEqual(result, [ -1, 0 , 1 ,2, 0, 1, 2, -1 ]);
+
+    t.end();
+});

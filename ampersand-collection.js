@@ -17,11 +17,19 @@ function Collection(models, options) {
     this._reset();
     this.initialize.apply(this, arguments);
     if (models) this.reset(models, assign({silent: true}, options));
+    if (options.postInit !== false) {
+        this.forEach(function(model) {
+            if(model.postInitialize) model.postInitialize.apply(model);
+        });
+        this.postInitialize.apply(this);
+    }
 }
 
 assign(Collection.prototype, AmpersandEvents, {
     initialize: function () {},
 
+    postInitialize: function () {},
+    
     isModel: function (model) {
         return this.model && model instanceof this.model;
     },
