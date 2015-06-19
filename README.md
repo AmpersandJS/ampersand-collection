@@ -125,7 +125,7 @@ var people = new AmpersandCollection([{ name: 'phil' }, { name: 'bob' }, { name:
 });
 ```
 
-### postInitialize `state.postInitialize()`
+### postInitialize `collection.postInitialize()`
 
 If you have defined a `postInitialize` function for your subclass of State, it will be invoked at creation time, just after it's parent or (parent-)collection `initialize` functions has been triggerd.
 
