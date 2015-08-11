@@ -115,9 +115,9 @@ var Library = AmpersandCollection.extend({
 ```
 
 
-### constructor/initialize `new AmpersandCollection([models], [options])`
+### constructor/initialize `new AmpersandCollection([models [, options]])`
 
-When creating an `AmpersandCollection`, you may choose to pass in the initial array of **`models`**. The collection's [`comparator`](#comparator) may be included as an option. If you define an **`initialize`** function, it will be invoked when the collection is created. There are a couple of options that, if provided, are attached to the collection directly: `model`, `comparator` and `parent`.
+When creating an `AmpersandCollection`, you may choose to pass in the initial array of **`models`**. The collection's [`comparator`](#comparator) may be included as an option. If you define an **`initialize`** function, it will be invoked when the collection is created, with **`models`** and **`options`** as arguments. There are a couple of options that, if provided, are attached to the collection directly: `model`, `comparator` and `parent`. 
 
 ```javascript
 var people = new AmpersandCollection([{ name: 'phil' }, { name: 'bob' }, { name: 'jane' }], {
