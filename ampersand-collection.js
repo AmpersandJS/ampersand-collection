@@ -77,6 +77,9 @@ assign(Collection.prototype, AmpersandEvents, {
                 id = targetProto.generateId(attrs);
             } else {
                 id = attrs[this.mainIndex];
+                if (id === undefined && this._isDerivedIndex(targetProto)) {
+                    id = targetProto._derived[this.mainIndex].fn.call(attrs);
+                }
             }
 
             // If a duplicate is found, prevent it from being added and
@@ -301,6 +304,13 @@ assign(Collection.prototype, AmpersandEvents, {
             indexVal = model.hasOwnProperty(attribute) ? model[attribute] : (model.get && model.get(attribute));
             if (indexVal != null) this._indexes[attribute][indexVal] = model;
         }
+    },
+
+    _isDerivedIndex: function(proto) {
+        if (!proto || typeof proto._derived !== 'object') {
+            return false;
+        }
+        return Object.keys(proto._derived).indexOf(this.mainIndex) >= 0;
     },
 
     // Internal method to create a model's ties to a collection.
