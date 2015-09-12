@@ -36,7 +36,11 @@
   },
   "scripts": {
     "start": "run-browser test/*",
-    "test": "node test/main.js | tap-spec"
+    "test": "node test/main.js | tap-spec",
+    "preversion": "git checkout master && git pull && npm ls",
+    "publish-patch": "npm run preversion && npm version patch && git push origin master --tags && npm publish",
+    "publish-minor": "npm run preversion && npm version minor && git push origin master --tags && npm publish",
+    "publish-major": "npm run preversion && npm version major && git push origin master --tags && npm publish"
   },
   "testling": {
     "files": "test/*.js",
