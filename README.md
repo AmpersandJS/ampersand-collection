@@ -47,7 +47,7 @@ var basicCollection = new Collection([
 ]);
 ```
 
-Adding [ampersand-collection-rest-mixin](https://github.com/AmpersandJS/ampersand-collection-rest-mixin) and [ampersand-collection-underscore-mixin](http://github.com/AmpersandJS/ampersand-collection-underscore-mixin). 
+Adding [ampersand-collection-rest-mixin](https://github.com/AmpersandJS/ampersand-collection-rest-mixin) and [ampersand-collection-underscore-mixin](http://github.com/AmpersandJS/ampersand-collection-underscore-mixin).
 
 ```js
 var Collection = require('ampersand-collection');
@@ -69,7 +69,7 @@ collection.fetch();
 
 ## A quick note about `instanceof` checks
 
-Because of module deps in npm and browserify, sometimes it’s possible to end up in a situation where the same `collection` constructor wasn't used to build a `collection` object. As a result, `instanceof` checks will fail. 
+Because of module deps in npm and browserify, sometimes it’s possible to end up in a situation where the same `collection` constructor wasn't used to build a `collection` object. As a result, `instanceof` checks will fail.
 
 To deal with this (because sometimes this is a legitimate scenario), `collection` simply creates a read-only `isCollection` property on all collection objects. You can use it to check whether or a not a given object is, in fact, a collection object—no matter what its constructor was.
 <!-- endhide -->
@@ -127,15 +127,15 @@ var people = new AmpersandCollection([{ name: 'phil' }, { name: 'bob' }, { name:
 
 ### mainIndex `collection.mainIndex`
 
-Specify which property the collection should use as the main index (and unique identifier) for the models/objects it holds. This is the property that [`get`](#ampersand-collection-get) uses to retrieve models, and what `add`, `set`, and `remove` uses to determine whether a collection already contains a model or not. 
+Specify which property the collection should use as the main index (and unique identifier) for the models/objects it holds. This is the property that [`get`](#ampersand-collection-get) uses to retrieve models, and what `add`, `set`, and `remove` uses to determine whether a collection already contains a model or not.
 
 If you specify a [`model`](http://ampersandjs.com/docs#ampersand-collection-model) property in the collection, and the model specifies an [`idAttribute`](http://ampersandjs.com/docs#ampersand-state-idattribute), the collection will use *that* as the `mainIndex` unless you explicitly set it to something else.
 
 If *no* `mainIndex` or `model` is specified `"id"` is used as the default `mainIndex`.
 
-This means, that *most* of the time you don't need to set `mainIndex` and things will still Just Work™.
+This means, that *most* of the time you don't need to set `mainIndex` and things will still Just Work™.  If you wish to index on a derived property, your derived `fn` must be a pure function, and will be bound to the object passed into the collection on `.add()/.remove()/.set()` etc.
 
-But if you wish, you may set it while extending `AmpersandCollection` like so:
+You may set it explicitly while extending `AmpersandCollection` like so:
 
 ```javascript
 var People = AmpersandCollection.extend({
@@ -176,7 +176,7 @@ Returns the `length` of the underlying array.
 
 ### isCollection/instanceof `collection.isCollection`
 
-Because of module deps in npm and browserify, sometimes it’s possible to end up in a situation where the same `collection` constructor wasn't used to build a `collection` object. As a result, `instanceof` checks will fail. 
+Because of module deps in npm and browserify, sometimes it’s possible to end up in a situation where the same `collection` constructor wasn't used to build a `collection` object. As a result, `instanceof` checks will fail.
 
 To deal with this (because sometimes this is a legitimate scenario), `collection` simply creates a read-only `isCollection` property on all collection objects. You can use it to check whether or a not a given object is, in fact, a collection object—no matter what its constructor was.
 
@@ -232,11 +232,11 @@ console.log(JSON.stringify(collection));
 
 ### set `collection.set(models, [options])`
 
-The **set** method performs a "smart" update of the collection with the passed list of models: 
+The **set** method performs a "smart" update of the collection with the passed list of models:
 
-* If a model in the list isn't in the collection, it will be added. 
-* If a model in the list is in the collection already, its attributes will be merged. 
-* If the collection contains any models that aren't in the list, they'll be removed. 
+* If a model in the list isn't in the collection, it will be added.
+* If a model in the list is in the collection already, its attributes will be merged.
+* If the collection contains any models that aren't in the list, they'll be removed.
 
 All of the appropriate `"add"`, `"remove"`, and `"change"` events are fired as this happens. If you'd like to customize the behavior, you can disable it with options: `{add: false}`, `{remove: false}`, or `{merge: false}`.
 
@@ -282,7 +282,7 @@ people.get('b', 'otherId') //=> { _id: 2, otherId: 'b', name: 'Julie' },
 
 ### at `collection.at(index)`
 
-Get a model from a collection, specified by `index`. Useful if your collection is sorted. 
+Get a model from a collection, specified by `index`. Useful if your collection is sorted.
 
 If your collection isn't sorted, `at()` will still retrieve models in insertion order; e.g., `collection.at(0)` returns the first model in the collection.
 
@@ -297,13 +297,13 @@ The models object/array can be references to actual models, or just a list of `i
 
 Adding and removing models one at a time is all well and good, but sometimes there are so many models to change that you'd rather just update the collection in bulk. Use **`reset()`** to replace a collection with a new list of models (or attribute hashes), triggering a single `"reset"` event at the end. For convenience, within a `"reset"` event, the list of any previous models is available as `options.previousModels`.
 
-Returns the newly-set models. 
+Returns the newly-set models.
 
 Calling `collection.reset()` without passing any models as arguments will empty the entire collection.
 
 ### sort `collection.sort([options])`
 
-Force a collection to re-sort itself. Triggers a `"sort"` event on the collection. 
+Force a collection to re-sort itself. Triggers a `"sort"` event on the collection.
 
 You don't need to call this under normal circumstances, as a collection with a `comparator` will sort itself whenever a model is added. To prevent this when adding a model, pass a `{sort: false}` option to `add()`.
 
@@ -357,7 +357,7 @@ people.filter(function (person) {
 
 ## credits
 
-Created by [@HenrikJoreteg](http://twitter.com/henrikjoreteg), but many ideas and some code (especially for `set()`) should be credited to Jeremy Ashkenas and the rest of the Backbone.js authors. 
+Created by [@HenrikJoreteg](http://twitter.com/henrikjoreteg), but many ideas and some code (especially for `set()`) should be credited to Jeremy Ashkenas and the rest of the Backbone.js authors.
 
 
 ## license

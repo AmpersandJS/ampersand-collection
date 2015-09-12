@@ -45,6 +45,29 @@ test('indexes: optionally create other indexes', function (t) {
     t.end();
 });
 
+test('indexes: permit indexing on derived', function (t) {
+    var MyState = State.extend({
+        props: { myid: 'number' },
+        derived: {
+            derivedProp: {
+                deps: ['myid'],
+                fn: function() { return this.myid + '_derived'; }
+            }
+        }
+    });
+    var MyCol = Collection.extend({
+        mainIndex: 'derivedProp',
+        model: MyState
+    });
+    var c = new MyCol();
+    var obj = {myid: 1};
+    var obj2 = {myid: 2};
+    var obj3 = {myid: 2}; // intentional duplicate
+    c.add([obj, obj2, obj3]);
+    t.equal(c.length, 2, 'honors derived index');
+    t.end();
+});
+
 test('models: support for model constructors', function (t) {
     var Model = function (attributes) {
         this.attributes = attributes;
