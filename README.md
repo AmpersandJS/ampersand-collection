@@ -364,4 +364,8 @@ Created by [@HenrikJoreteg](http://twitter.com/henrikjoreteg), but many ideas an
 
 MIT
 
+## changelog
+
+- 1.5.0 - add ability to index on a derived property
+
 <!-- endhide -->
