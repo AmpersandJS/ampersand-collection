@@ -80,7 +80,7 @@ To deal with this (because sometimes this is a legitimate scenario), `collection
 
 Create a collection class of your own by extending `AmpersandCollection`, providing the required instance properties to be attached instances of your class.
 
-Typically you will specify a `model` constructor (if you are storing [ampersand-state](#ampersand-state) or [ampersand-model](#ampersand-model) objects).
+Typically you will specify a `model` constructor (if you are storing [ampersand-state](http://ampersandjs.com/docs#ampersand-state) or [ampersand-model](http://ampersandjs.com/docs#ampersand-model) objects).
 
 ### model `collection.model`
 
