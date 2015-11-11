@@ -229,6 +229,33 @@ console.log(JSON.stringify(collection));
 //=> "[{\"name\":\"Tim\",\"age\":5},{\"name\":\"Ida\",\"age\":26},{\"name\":\"Rob\",\"age\":55}]"
 ```
 
+### parse `collection.parse(data, [options])`
+
+The parse method gets called if the `{parse: true}` option is passed when calling `collection.set` method. By default, `parse` simply returns the data it was passed, but can be overwritten through `.extend` to provide any additional parsing logic to extract the array of data that should be stored in the collection. This is most commonly used when processing data coming back from an ajax request. The response from an API may look like this:
+
+```javascript
+{
+  "limit": 100,
+  "offset": 0,
+  "data": [
+    {"name": "larry"},
+    {"name": "curly"},
+    {"name": "moe"}
+  ]
+}
+```
+
+To extract `data` you'd define a `parse` method on the collection as follows, to return the array of data to be stored.
+
+```javascript
+var MyCollection = Collection.extend({
+    parse: function (response) {
+        return response.data;
+    }
+});
+```
+
+If you're using `ampersand-rest-collection`'s `fetch()` method, the `parse` method will be called with the response by default. Also, the options object passed to `set()` gets passed through as a second argument to allow for conditional parsing logic.
 
 ### set `collection.set(models, [options])`
 
