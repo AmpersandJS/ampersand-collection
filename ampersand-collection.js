@@ -285,9 +285,9 @@ assign(Collection.prototype, AmpersandEvents, {
             return;
         }
         // Not a specific attribute
-        for (attribute in this._indexes) {
-            indexVal = model.hasOwnProperty(attribute) ? model[attribute] : (model.get && model.get(attribute));
-            delete this._indexes[attribute][indexVal];
+        for (var indexAttr in this._indexes) {
+            indexVal = model.hasOwnProperty(indexAttr) ? model[indexAttr] : (model.get && model.get(indexAttr));
+            delete this._indexes[indexAttr][indexVal];
         }
     },
 
@@ -300,9 +300,9 @@ assign(Collection.prototype, AmpersandEvents, {
             return;
         }
         // Not a specific attribute
-        for (attribute in this._indexes) {
-            indexVal = model.hasOwnProperty(attribute) ? model[attribute] : (model.get && model.get(attribute));
-            if (indexVal != null) this._indexes[attribute][indexVal] = model;
+        for (var indexAttr in this._indexes) {
+            indexVal = model.hasOwnProperty(indexAttr) ? model[indexAttr] : (model.get && model.get(indexAttr));
+            if (indexVal != null) this._indexes[indexAttr][indexVal] = model;
         }
     },
 
