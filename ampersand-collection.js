@@ -146,7 +146,7 @@ assign(Collection.prototype, AmpersandEvents, {
         if (!options.silent) {
             for (i = 0, length = toAdd.length; i < length; i++) {
                 model = toAdd[i];
-                if (model.trigger) {
+                if (model.trigger && typeof model.trigger === 'function') {
                     model.trigger('add', model, this, options);
                 } else {
                     this.trigger('add', model, this, options);
