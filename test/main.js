@@ -275,7 +275,12 @@ test('Serialize/toJSON method', function (t) {
 test('Ensure `isCollection` exists and is immutable', function (t) {
     var c = new Collection();
     t.ok(c.isCollection);
-    c.isCollection = false;
+    try {
+      c.isCollection = false;
+    } catch (e) {
+      //It's ok if this throws, the property only has a setter
+      //and some browsers (i.e. phantomjs) error on this
+    }
     t.ok(c.isCollection);
     t.end();
 });

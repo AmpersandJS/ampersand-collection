@@ -348,7 +348,9 @@ Object.defineProperties(Collection.prototype, {
         }
     },
     isCollection: {
-        value: true
+        get: function () {
+            return true;
+        }
     }
 });
 

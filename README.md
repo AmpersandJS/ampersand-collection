@@ -10,13 +10,6 @@ It does not require underscore or jQuery, but instead makes it easy to extend wi
 Part of the [Ampersand.js toolkit](http://ampersandjs.com) for building clientside applications.
 <!-- endhide -->
 
-<!-- starthide -->
-## browser support
-
-[![browser support](https://ci.testling.com/ampersandjs/ampersand-collection.png)
-](https://ci.testling.com/ampersandjs/ampersand-collection)
-<!-- endhide -->
-
 ## Installation
 
 ```
