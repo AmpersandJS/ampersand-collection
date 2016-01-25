@@ -18,8 +18,9 @@
   },
   "devDependencies": {
     "ampersand-state": "^4.4.5",
+    "jshint": "^2.9.1",
     "phantomjs": "^1.9.19",
-    "precommit-hook": "0.x.x",
+    "precommit-hook": "^3.0.0",
     "tape": "2.x.x",
     "zuul": "^3.9.0"
   },
@@ -47,6 +48,13 @@
     "preversion": "git checkout master && git pull && npm ls",
     "publish-patch": "npm run preversion && npm version patch && git push origin master --tags && npm publish",
     "publish-minor": "npm run preversion && npm version minor && git push origin master --tags && npm publish",
-    "publish-major": "npm run preversion && npm version major && git push origin master --tags && npm publish"
-  }
+    "publish-major": "npm run preversion && npm version major && git push origin master --tags && npm publish",
+    "lint": "jshint .",
+    "validate": "npm ls"
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ]
 }
