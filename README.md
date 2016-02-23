@@ -377,7 +377,7 @@ people.filter(function (person) {
 
 ## credits
 
-Created by [@HenrikJoreteg](http://twitter.com/henrikjoreteg), but many ideas and some code (especially for `set()`) should be credited to Jeremy Ashkenas and the rest of the Backbone.js authors.
+Created by [@HenrikJoreteg](http://twitter.com/henrikjoreteg), but many ideas and some code (especially for `set()`) should be credited to [Jeremy Ashkenas](https://github.com/jashkenas) and the rest of the Backbone.js authors.
 
 
 ## license
