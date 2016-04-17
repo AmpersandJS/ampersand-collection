@@ -1,8 +1,8 @@
 var AmpersandEvents = require('ampersand-events');
 var classExtend = require('ampersand-class-extend');
-var isArray = require('lodash.isarray');
-var bind = require('lodash.bind');
-var assign = require('lodash.assign');
+var isArray = require('lodash/isarray');
+var bind = require('lodash/bind');
+var assign = require('lodash/assign');
 var slice = [].slice;
 
 function Collection(models, options) {
