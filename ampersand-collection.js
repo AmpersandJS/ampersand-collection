@@ -1,6 +1,6 @@
 var AmpersandEvents = require('ampersand-events');
 var classExtend = require('ampersand-class-extend');
-var isArray = require('lodash/isarray');
+var isArray = require('lodash/isArray');
 var bind = require('lodash/bind');
 var assign = require('lodash/assign');
 var slice = [].slice;
