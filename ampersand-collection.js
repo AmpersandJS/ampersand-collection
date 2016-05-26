@@ -38,8 +38,8 @@ assign(Collection.prototype, AmpersandEvents, {
     // overridable serialize method
     serialize: function () {
         return this.map(function (model) {
-            if (model.serialize) {
-                return model.serialize();
+            if (model.toJSON) {
+                return model.toJSON();
             } else {
                 var out = {};
                 assign(out, model);
