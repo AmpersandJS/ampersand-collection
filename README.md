@@ -118,6 +118,65 @@ var people = new AmpersandCollection([{ name: 'phil' }, { name: 'bob' }, { name:
 });
 ```
 
+### postInitialize `collection.postInitialize()`
+
+If you have defined a `postInitialize` function for your subclass of Collection, it will be invoked at creation time, just after it's parent or (parent-)collection `initialize` functions has been triggerd.
+
+```
+var State = require('ampersand-state');
+var Collection = require('ampersand-collection');
+
+var Widget = State.extend({
+    props: {
+        name: 'string',
+        funLevel: 'number'
+    },
+    postInitialize: function() {
+        console.log('code to run just AFTER this.parent.initialize has been invoked');
+    }
+});
+
+var Hat = State.extend({
+    props: {
+        color: 'string'
+    },
+    postInitialize: function() {
+        console.log('code to run just AFTER this.parent.initialize has been invoked');
+    }
+});
+
+var WidgetCollection = Collection.extend({
+    model: Widget,
+    postInitialize: function() {
+        console.log('code to run just AFTER this.parent.initialize has been invoked');
+    }
+});
+
+var Person = AmpersandState.extend({
+    props: {
+        name: 'string'
+    },
+    children: {
+        hat: Hat
+    }
+    collections: {
+        widgets: WidgetCollection
+    }
+});
+
+var me = new Person({
+    name: 'Bob',
+    hat: {
+        color: 'red'
+    }
+    widgets: [
+        { name: 'music', funLevel: 10 },
+        { name: 'coding', funLevel: 10 }
+    ]
+});
+
+```
+
 ### mainIndex `collection.mainIndex`
 
 Specify which property the collection should use as the main index (and unique identifier) for the models/objects it holds. This is the property that [`get`](#ampersand-collection-get) uses to retrieve models, and what `add`, `set`, and `remove` uses to determine whether a collection already contains a model or not.
