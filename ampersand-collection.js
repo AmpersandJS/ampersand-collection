@@ -123,9 +123,9 @@ assign(Collection.prototype, AmpersandEvents, {
             }
             if (toRemove.length) this.remove(toRemove, options);
 
-            // Add indexes again to make sure they were not removed above
-            if (toAdd.length) {
-                this._index(toAdd[0]);
+            // Add indexes again to make sure they were not removed above.
+            for (i = 0, length = toAdd.length; i < length; i++) {
+                this._index(toAdd[i]);
             }
         }
 
