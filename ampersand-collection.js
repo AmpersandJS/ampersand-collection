@@ -122,6 +122,11 @@ assign(Collection.prototype, AmpersandEvents, {
                 if (!modelMap[model.cid || model[this.mainIndex]]) toRemove.push(model);
             }
             if (toRemove.length) this.remove(toRemove, options);
+
+            // Add indexes again to make sure they were not removed above.
+            for (i = 0, length = toAdd.length; i < length; i++) {
+                this._index(toAdd[i]);
+            }
         }
 
         // See if sorting is needed, update `length` and splice in new models.

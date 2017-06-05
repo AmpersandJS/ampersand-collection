@@ -550,3 +550,24 @@ test('Collection should rethrow change events on a model', function (t) {
 
     model.name = 'shmoe';
 });
+
+test('indexes: should reindex on a `set` of a model with same index secondary index value (#84)', function (t) {
+    var FooCollection = Collection.extend({
+        indexes: ['foo', 'see']
+    });
+
+    var obj = {id: '47', foo: 'bar', see: 'saw'};
+    var obj2 = {id: '48', foo: 'bar', see: 'food'};
+    var obj3 = {id: '49', foo: 'far', see: 'saw'};
+
+    var c = new FooCollection([obj]);
+
+    t.equal(c.get('bar', 'foo'), obj);
+
+    c.set([obj2, obj3]);
+
+    t.equal(c.get('bar', 'foo'), obj2);
+    t.equal(c.get('saw', 'see'), obj3);
+
+    t.end();
+});
