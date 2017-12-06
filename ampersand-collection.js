@@ -4,7 +4,6 @@ var isArray = require('lodash/isArray');
 var bind = require('lodash/bind');
 var assign = require('lodash/assign');
 var slice = [].slice;
-var _ = require('lodash');
 
 function Collection(models, options) {
     options || (options = {});
@@ -168,8 +167,7 @@ assign(Collection.prototype, AmpersandEvents, {
     get: function (query, indexName) {
         if (query == null) return;
         var index = this._indexes[indexName || this.mainIndex];
-        if(index && index[query[this.mainIndex]] && query[this.mainIndex] === undefined)
-        return;
+        if(index && index[query[this.mainIndex]] && query[this.mainIndex] === undefined) return;
         return (index && (index[query] || index[query[this.mainIndex]])) || this._indexes.cid[query] || this._indexes.cid[query.cid];
     },
 
