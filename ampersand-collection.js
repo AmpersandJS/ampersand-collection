@@ -166,8 +166,22 @@ assign(Collection.prototype, AmpersandEvents, {
 
     get: function (query, indexName) {
         if (query == null) return;
-        var index = this._indexes[indexName || this.mainIndex];
-        return (index && (index[query] || index[query[this.mainIndex]])) || this._indexes.cid[query] || this._indexes.cid[query.cid];
+
+        var collectionMainIndex = this.mainIndex;
+        var index = this._indexes[indexName || collectionMainIndex];
+
+        return (
+            (
+                index && (
+                    index[query] || (
+                        query[collectionMainIndex] !== undefined &&
+                        index[query[collectionMainIndex]]
+                    )
+                )
+            ) ||
+            this._indexes.cid[query] ||
+            this._indexes.cid[query.cid]
+        );
     },
 
     // Get the model at the given index.

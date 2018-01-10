@@ -571,3 +571,11 @@ test('indexes: should reindex on a `set` of a model with same index secondary in
 
     t.end();
 });
+
+test('Model with "undefined" id.', function (t) {
+    var c = new Collection();
+    c.model = Stooge;
+    c.set([{name: 'moe', id: 'undefined'}, {name: 'larry', id: '2'}, {name: 'curly', id: ''}]);
+    t.equal(c.length, 3, 'should have 3 stooges');
+    t.end();
+});
